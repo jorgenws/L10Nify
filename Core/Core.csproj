@@ -39,12 +39,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DifferenceFinder.cs" />
     <Compile Include="HistoryEntry.cs" />
     <Compile Include="HistoryEntryFactory.cs" />
+    <Compile Include="JsonLocalizationLoader.cs" />
     <Compile Include="LanguageFactory.cs" />
     <Compile Include="Language.cs" />
+    <Compile Include="LoadedLocalization.cs" />
     <Compile Include="Localization.cs" />
     <Compile Include="JsonPersister.cs" />
+    <Compile Include="LocalizationBuilder.cs" />
+    <Compile Include="Model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

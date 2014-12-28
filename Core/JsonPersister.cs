@@ -1,16 +1,16 @@
 ﻿using System;
 
 namespace Core {
-    public class JsonPersister : IPersister {
+    public class JsonLocalizationPersister : ILocalizationPersister {
         public void Write(string fileName,
-                         Localization localization) {
+                          ILocalization localization) {
             //ToDo: Implement persisting to disk in JSON format.
             throw new NotImplementedException();
         }
     }
 
-    public interface IPersister {
+    public interface ILocalizationPersister {
         void Write(string fileName,
-                  Localization localization);
+                   ILocalization localization);
     }
 }

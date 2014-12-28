@@ -10,30 +10,13 @@ namespace CoreTests {
         private const string IsoName = "no";
         private const string DisplayName = "Norsk";
         
-        private Mock<ILanguageFactory> _languageFactory;
-        private Mock<IHistoryEntryFactory> _historyEntryFactory;
-        private Mock<IPersister> _persister;
-        
-        [SetUp]
-        public void SetUp() {
-            _languageFactory = new Mock<ILanguageFactory>();
-            _historyEntryFactory = new Mock<IHistoryEntryFactory>();
-            _persister = new Mock<IPersister>();
-        }
-
         [Test]
         public void AddLanguage_LanguageIsOk_IsAdded() {
             var language = CreateDefaultLanguage();
-            _languageFactory.Setup(c => c.Create(_languageId,
-                                                 IsoName,
-                                                 DisplayName))
-                            .Returns(language);
 
-            var localization = CreateLocalization(_languageFactory.Object);
+            var localization = CreateLocalization();
 
-            localization.AddALanguage(_languageId,
-                                      IsoName,
-                                      DisplayName);
+            localization.AddLanguage(language);
 
             CollectionAssert.Contains(localization.Languages(),
                                       language);
@@ -42,35 +25,21 @@ namespace CoreTests {
         [Test]
         public void AddLanguage_LanguageIdIsAlreadyInUse_ThrowsException() {
             var language = CreateDefaultLanguage();
-            _languageFactory.Setup(c => c.Create(_languageId,
-                                                 IsoName,
-                                                 DisplayName))
-                            .Returns(language);
 
-            var localization = CreateLocalization(_languageFactory.Object);
+            var localization = CreateLocalization();
 
-            localization.AddALanguage(_languageId,
-                                      IsoName,
-                                      DisplayName);
+            localization.AddLanguage(language);
 
-            Assert.Throws<Exception>(() => localization.AddALanguage(_languageId,
-                                                                     IsoName,
-                                                                     DisplayName));
+            Assert.Throws<Exception>(() => localization.AddLanguage(language));
         }
 
         [Test]
         public void RemoveLanguage_LanguageExists_IsRemoved() {
             var language = CreateDefaultLanguage();
-            _languageFactory.Setup(c => c.Create(_languageId,
-                                                 IsoName,
-                                                 DisplayName))
-                            .Returns(language);
 
-            var localization = CreateLocalization(_languageFactory.Object);
+            var localization = CreateLocalization();
 
-            localization.AddALanguage(_languageId,
-                                      IsoName,
-                                      DisplayName);
+            localization.AddLanguage(language);
 
             localization.RemoveLanguage(_languageId);
 
@@ -87,31 +56,8 @@ namespace CoreTests {
             CollectionAssert.IsEmpty(languageFactory.Languages());
         }
 
-        private Localization CreateLocalization(ILanguageFactory languageFactory,
-                                                IHistoryEntryFactory historyEntryFactory,
-                                                IPersister persister) {
-            return new Localization(languageFactory,
-                                    historyEntryFactory,
-                                    persister);
-        }
-
-        private Localization CreateLocalization(ILanguageFactory languageFactory,
-                                                IHistoryEntryFactory historyEntryFactory) {
-            return new Localization(languageFactory,
-                                    historyEntryFactory,
-                                    _persister.Object);
-        }
-
-        private Localization CreateLocalization(ILanguageFactory languageFactory) {
-            return new Localization(languageFactory,
-                                    _historyEntryFactory.Object,
-                                    _persister.Object);
-        }
-
         private Localization CreateLocalization() {
-            return new Localization(_languageFactory.Object,
-                                    _historyEntryFactory.Object,
-                                    _persister.Object);
+            return new Localization();
         }
 
         private Language CreateDefaultLanguage() {

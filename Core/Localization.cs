@@ -3,35 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Core {
-    public class Localization {
-        private readonly ILanguageFactory _languageFactory;
-        private readonly IHistoryEntryFactory _historyEntryFactory;
-        private readonly IPersister _persister;
+    public class Localization : ILocalization {
         private readonly List<Language> _languages;
         private readonly List<HistoryEntry> _historyEntries;
 
-        private Localization _loadedLocalization; //Create separeate readonly class
-
-        public Localization(ILanguageFactory languageFactory,
-            IHistoryEntryFactory historyEntryFactory,
-            IPersister persister) {
+        public Localization() {
             _languages = new List<Language>();
             _historyEntries = new List<HistoryEntry>();
-
-            _languageFactory = languageFactory;
-            _historyEntryFactory = historyEntryFactory;
-            _persister = persister;
         }
 
-        public void AddALanguage(Guid id,
-                                 string isoName,
-                                 string displayName) {
-            if (_languages.Any(c => c.Id == id))
+        public void AddLanguage(Language language) {
+            if (_languages.Any(c => c.Id == language.Id))
                 throw new Exception("Cannot add more then one language with the same id");
 
-            var language = _languageFactory.Create(id,
-                                                   isoName,
-                                                   displayName);
             _languages.Add(language);
         }
 
@@ -47,17 +31,20 @@ namespace Core {
             return _languages;
         }
 
-        public void Save() {
-            var historyEntry = _historyEntryFactory.Create(_languages,
-                                                           _loadedLocalization);
-            _historyEntries.Add(historyEntry);
-
-            _persister.Write("some file name, default to the existing one",
-                             this);
+        public void AddHistoryEntry(HistoryEntry entry) {
+            _historyEntries.Add(entry);
         }
 
         public List<HistoryEntry> History() {
             return _historyEntries;
         }
+    }
+
+    public interface ILocalization {
+        void AddLanguage(Language language);
+        void RemoveLanguage(Guid id);
+        List<Language> Languages();
+        void AddHistoryEntry(HistoryEntry entry);
+        List<HistoryEntry> History();
     }
 }
