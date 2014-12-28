@@ -1,11 +1,26 @@
-﻿using System;
+﻿using System.IO;
+using Newtonsoft.Json;
 
 namespace Core {
     public class JsonLocalizationPersister : ILocalizationPersister {
-        public void Write(string fileName,
+        public void Write(string filePath,
                           ILocalization localization) {
-            //ToDo: Implement persisting to disk in JSON format.
-            throw new NotImplementedException();
+            var persitance = new LocalizationPersistance {
+                                                             Languages = localization.Languages()
+                                                                                     .ToArray(),
+                                                             HistoryEntries = localization.History()
+                                                                                          .ToArray()
+                                                         };
+
+            using (var fs = File.Open(filePath, FileMode.CreateNew)) {
+                using (var sw = new StreamWriter(fs)) {
+                    using (var jw = new JsonTextWriter(sw)) {
+                        var serializer = new JsonSerializer();
+                        serializer.Serialize(jw,
+                                             persitance);
+                    }
+                }
+            }       
         }
     }
 
