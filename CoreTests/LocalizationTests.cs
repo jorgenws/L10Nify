@@ -11,10 +11,14 @@ namespace CoreTests {
         private const string DisplayName = "Norsk";
         
         private Mock<ILanguageFactory> _languageFactory;
-
+        private Mock<IHistoryEntryFactory> _historyEntryFactory;
+        private Mock<IPersister> _persister;
+        
         [SetUp]
         public void SetUp() {
             _languageFactory = new Mock<ILanguageFactory>();
+            _historyEntryFactory = new Mock<IHistoryEntryFactory>();
+            _persister = new Mock<IPersister>();
         }
 
         [Test]
@@ -83,12 +87,31 @@ namespace CoreTests {
             CollectionAssert.IsEmpty(languageFactory.Languages());
         }
 
+        private Localization CreateLocalization(ILanguageFactory languageFactory,
+                                                IHistoryEntryFactory historyEntryFactory,
+                                                IPersister persister) {
+            return new Localization(languageFactory,
+                                    historyEntryFactory,
+                                    persister);
+        }
+
+        private Localization CreateLocalization(ILanguageFactory languageFactory,
+                                                IHistoryEntryFactory historyEntryFactory) {
+            return new Localization(languageFactory,
+                                    historyEntryFactory,
+                                    _persister.Object);
+        }
+
         private Localization CreateLocalization(ILanguageFactory languageFactory) {
-            return new Localization(languageFactory);
+            return new Localization(languageFactory,
+                                    _historyEntryFactory.Object,
+                                    _persister.Object);
         }
 
         private Localization CreateLocalization() {
-            return new Localization(_languageFactory.Object);
+            return new Localization(_languageFactory.Object,
+                                    _historyEntryFactory.Object,
+                                    _persister.Object);
         }
 
         private Language CreateDefaultLanguage() {
