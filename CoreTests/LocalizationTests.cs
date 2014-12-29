@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Core;
 using NUnit.Framework;
@@ -14,7 +13,7 @@ namespace CoreTests {
         private readonly Guid _areaId = Guid.Parse("{DF227C31-D5A0-4B33-A0E9-F5E528ABACBB}");
         private const string AreaName = "Area";
 
-        private readonly Guid _itemId = Guid.Parse("{AF469E82-2000-446F-8F13-9D02D594D883}");
+        private readonly Guid _keyId = Guid.Parse("{AF469E82-2000-446F-8F13-9D02D594D883}");
         private const string ItemKey = "Key";
 
         private readonly Guid _textId = Guid.Parse("{D5EEDD4C-D52E-4F02-B4A0-D4E00FBBE3AD}");
@@ -101,26 +100,21 @@ namespace CoreTests {
 
         [Test]
         public void AddLocalizedItem_NoMatchingArea_ThrowsException() {
-            var localizedItem = CreateDefaultCLocalizedItem();
+            var localizationKey = CreateDefaultCLocalizedItem();
             var localization = CreateLocalization();
 
-            Assert.Throws<Exception>(() => localization.AddLocalizedItem(_areaId,
-                                                                         localizedItem));
+            Assert.Throws<Exception>(() => localization.AddLocalizedKey(localizationKey));
         }
 
         [Test]
         public void AddLocalizedItem_HasArea_IsAdded() {
             var area = CreateDefaultArea();
-            var localizedItem = CreateDefaultCLocalizedItem();
+            var localizationKey = CreateDefaultCLocalizedItem();
 
             var localization = CreateLocalization();
             localization.AddArea(area);
-            localization.AddLocalizedItem(area.Id,
-                                          localizedItem);
-            CollectionAssert.Contains(localization.Areas()
-                                                  .First()
-                                                  .Items,
-                                      localizedItem);
+            localization.AddLocalizedKey(localizationKey);
+            CollectionAssert.Contains(localization.Keys(), localizationKey);
         }
 
         [Test]
@@ -130,13 +124,9 @@ namespace CoreTests {
 
             var localization = CreateLocalization();
             localization.AddArea(area);
-            localization.AddLocalizedItem(area.Id,
-                                          localizedItem);
-            localization.RemoveLocalizedItem(area.Id,
-                                             localizedItem.Id);
-            CollectionAssert.DoesNotContain(localization.Areas()
-                                                        .First()
-                                                        .Items,
+            localization.AddLocalizedKey(localizedItem);
+            localization.RemoveLocalizationKey(localizedItem.Id);
+            CollectionAssert.DoesNotContain(localization.Keys(),
                                             localizedItem);
         }
 
@@ -147,7 +137,6 @@ namespace CoreTests {
             var localization = CreateLocalization();
 
             Assert.Throws<Exception>(() => localization.AddLocalizedText(_areaId,
-                                                                         _itemId,
                                                                          localizedText));
         }
 
@@ -160,29 +149,23 @@ namespace CoreTests {
             localization.AddArea(area);
 
             Assert.Throws<Exception>(() => localization.AddLocalizedText(_areaId,
-                                                                         _itemId,
                                                                          localizedText));
         }
 
         [Test]
         public void AddLocalizedText_IsOk_IsAdded() {
             var area = CreateDefaultArea();
-            var item = CreateDefaultCLocalizedItem();
+            var key = CreateDefaultCLocalizedItem();
             var text = CreateDefaultLocalizedText();
 
             var localization = CreateLocalization();
 
             localization.AddArea(area);
-            localization.AddLocalizedItem(area.Id,
-                                          item);
+            localization.AddLocalizedKey(key);
             localization.AddLocalizedText(area.Id,
-                                          item.Id,
                                           text);
 
-            CollectionAssert.Contains(localization.Areas()
-                                                  .First()
-                                                  .Items.First()
-                                                  .Texts,
+            CollectionAssert.Contains(localization.Texts(),
                                       text);
         }
 
@@ -195,25 +178,15 @@ namespace CoreTests {
             var localization = CreateLocalization();
 
             localization.AddArea(area);
-            localization.AddLocalizedItem(area.Id,
-                                          item);
+            localization.AddLocalizedKey(item);
             localization.AddLocalizedText(area.Id,
-                                          item.Id,
                                           text);
-            localization.RemoveLocalizedText(area.Id,
-                                             item.Id,
-                                             text.Id);
+            localization.RemoveLocalizedText(text.Id);
 
-            CollectionAssert.DoesNotContain(localization.Areas()
-                                                        .First()
-                                                        .Items.First()
-                                                        .Texts,
+            CollectionAssert.DoesNotContain(localization.Texts(),
                                             text);
         }
 
-        //ToDo: Tests for add and remove localizedText
-        //Then extend the json persister and loader
-        
         private Localization CreateLocalization() {
             return new Localization();
         }
@@ -229,39 +202,25 @@ namespace CoreTests {
         private Area CreateDefaultArea() {
             return new Area {
                                 Id = _areaId,
-                                Name = AreaName,
-                                Items = new List<LocalizedItem>()
+                                Name = AreaName
                             };
         }
 
-        private LocalizedItem CreateDefaultCLocalizedItem() {
-            return new LocalizedItem {
-                                         Id = _itemId,
+        private LocalizationKey CreateDefaultCLocalizedItem() {
+            return new LocalizationKey {
+                                         Id = _keyId,
                                          Key = ItemKey,
-                                         Texts = new List<LocalizedText>()
+                                         AreaId = _areaId
                                      };
         }
 
         private LocalizedText CreateDefaultLocalizedText() {
             return new LocalizedText {
                                          Id = _textId,
+                                         KeyId = _keyId,
                                          LanguageId = _languageId,
                                          Value = Text
                                      };
-        }
-
-        private Area CreateDefaultFilledInArea() {
-            var area = CreateDefaultArea();
-            var localizedItem = CreateDefaultCLocalizedItem();
-            var localizedText = CreateDefaultLocalizedText();
-
-            localizedItem.Texts = new List<LocalizedText> {
-                                                              localizedText
-                                                          };
-            area.Items = new List<LocalizedItem> {
-                                                     localizedItem
-                                                 };
-            return area;
         }
     }
 }

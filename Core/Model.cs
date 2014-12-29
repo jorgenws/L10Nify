@@ -45,11 +45,11 @@ namespace Core {
             _localization.RemoveLanguage(id);
         }
 
-        public List<Language> RetriveLanguages() {
+        public IEnumerable<Language> RetriveLanguages() {
             return _localization.Languages();
         }
 
-        public List<HistoryEntry> RetriveHistoryEntries() {
+        public IEnumerable<HistoryEntry> RetriveHistoryEntries() {
             return _localization.History();
         }
 
