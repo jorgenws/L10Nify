@@ -43,7 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AreaFactory.cs" />
     <Compile Include="DifferenceFinder.cs" />
+    <Compile Include="GuidGenerator.cs" />
     <Compile Include="HistoryEntry.cs" />
     <Compile Include="HistoryEntryFactory.cs" />
     <Compile Include="JsonLocalizationLoader.cs" />
@@ -53,7 +55,9 @@
     <Compile Include="Localization.cs" />
     <Compile Include="JsonPersister.cs" />
     <Compile Include="LocalizationBuilder.cs" />
+    <Compile Include="LocalizationKeyFactory.cs" />
     <Compile Include="LocalizationPersistance.cs" />
+    <Compile Include="LocalizedTextFactory.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

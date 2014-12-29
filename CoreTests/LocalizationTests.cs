@@ -255,7 +255,7 @@ namespace CoreTests {
                                     newText);
 
             Assert.AreEqual(newText,
-                            text.Value);
+                            text.Text);
         }
 
         [Test]
@@ -312,7 +312,7 @@ namespace CoreTests {
                                          Id = _textId,
                                          KeyId = _keyId,
                                          LanguageId = _languageId,
-                                         Value = Text
+                                         Text = Text
                                      };
         }
     }

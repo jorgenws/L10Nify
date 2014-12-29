@@ -104,7 +104,7 @@ namespace Core {
             if (!_texts.ContainsKey(textId))
                 throw new Exception("Text does not exist");
 
-            _texts[textId].Value = newText;
+            _texts[textId].Text = newText;
         }
 
         public void RemoveLocalizedText(Guid localizedTextId) {
@@ -225,7 +225,7 @@ namespace Core {
     public class LocalizedText {
         public Guid Id { get; set; }
         public Guid KeyId { get; set; }
-        public string Value { get; set; }
+        public string Text { get; set; }
         public Guid LanguageId { get; set; }
     }
 }

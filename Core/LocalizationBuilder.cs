@@ -41,7 +41,7 @@ namespace Core {
         private LocalizedText CopyText(LocalizedText text) {
             return new LocalizedText {
                                          Id = text.Id,
-                                         Value = text.Value,
+                                         Text = text.Text,
                                          LanguageId = text.LanguageId,
                                          KeyId = text.KeyId
                                      };

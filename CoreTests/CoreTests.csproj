@@ -46,9 +46,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DifferenceFinderTests.cs" />
+    <Compile Include="AreaFactoryTests.cs" />
     <Compile Include="LanguageFactoryTests.cs" />
     <Compile Include="LocalizationBuilderTests.cs" />
+    <Compile Include="LocalizationKeyFactoryTests.cs" />
     <Compile Include="LocalizationTests.cs" />
+    <Compile Include="LocalizedTextFactoryTests.cs" />
     <Compile Include="ModelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

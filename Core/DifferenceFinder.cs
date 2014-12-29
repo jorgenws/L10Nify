@@ -65,7 +65,7 @@ namespace Core {
             if (x == y)
                 throw new NotImplementedException("This method compares by value");
 
-            return x.Id == y.Id && x.Value == y.Value && x.KeyId == y.KeyId && x.LanguageId == y.LanguageId;
+            return x.Id == y.Id && x.Text == y.Text && x.KeyId == y.KeyId && x.LanguageId == y.LanguageId;
         }
 
         private string Difference<T>(List<T> previous,
