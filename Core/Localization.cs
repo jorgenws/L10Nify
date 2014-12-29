@@ -105,30 +105,43 @@ namespace Core {
                 foreach (var text in textsToBeRemoved)
                     _texts.Remove(text.Id);
             }
-                
         }
 
         public void AddHistoryEntry(HistoryEntry entry) {
             _historyEntries.Add(entry);
         }
 
-        public IEnumerable<Area> Areas() {
+        public IEnumerable<Area> RetriveAreas() {
             return _area.Values;
         }
 
-        public IEnumerable<LocalizationKey> Keys() {
+        public IEnumerable<LocalizationKey> RetriveKeys() {
             return _keys.Values;
         }
 
-        public IEnumerable<LocalizedText> Texts() {
-            return _texts.Values;
-        } 
+        public LocalizationKey RetriveKey(Guid keyId) {
+            if (_keys.ContainsKey(keyId))
+                return _keys[keyId];
 
-        public IEnumerable<Language> Languages() {
+            return null;
+        }
+
+        public IEnumerable<LocalizedText> RetriveTexts() {
+            return _texts.Values;
+        }
+
+        public LocalizedText RetiveText(Guid textId) {
+            if (_texts.ContainsKey(textId)) 
+                return _texts[textId];
+
+            return null;
+        }
+
+        public IEnumerable<Language> RetriveLanguages() {
             return _languages.Values;
         }
 
-        public IEnumerable<HistoryEntry> History() {
+        public IEnumerable<HistoryEntry> RetriveHistory() {
             return _historyEntries;
         }
     }
@@ -144,11 +157,13 @@ namespace Core {
         void AddLanguage(Language language);
         void RemoveLanguage(Guid languageId);
         void AddHistoryEntry(HistoryEntry entry);
-        IEnumerable<Area> Areas();
-        IEnumerable<LocalizationKey> Keys();
-        IEnumerable<LocalizedText> Texts();
-        IEnumerable<Language> Languages();
-        IEnumerable<HistoryEntry> History();
+        IEnumerable<Area> RetriveAreas();
+        IEnumerable<LocalizationKey> RetriveKeys();
+        LocalizationKey RetriveKey(Guid keyId);
+        IEnumerable<LocalizedText> RetriveTexts();
+        LocalizedText RetiveText(Guid textId);
+        IEnumerable<Language> RetriveLanguages();
+        IEnumerable<HistoryEntry> RetriveHistory();
     }
 
     public class Area {

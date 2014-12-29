@@ -15,6 +15,9 @@ namespace Core {
             }
 
             return new LoadedLocalization(filePath,
+                                          persistance.Areas.ToList(),
+                                          persistance.Keys.ToList(),
+                                          persistance.Texts.ToList(),
                                           persistance.Languages.ToList(),
                                           persistance.HistoryEntries.ToList());
         }

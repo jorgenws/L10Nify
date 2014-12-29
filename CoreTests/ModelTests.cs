@@ -59,7 +59,7 @@ namespace CoreTests {
         [Test]
         public void RetriveLanguages_OneLanguage_ReturnsOneLanguage() {
             var language = CreateLanguage();
-            _localization.Setup(c => c.Languages())
+            _localization.Setup(c => c.RetriveLanguages())
                          .Returns(new List<Language> {
                                                          language
                                                      });
@@ -75,7 +75,7 @@ namespace CoreTests {
         [Test]
         public void RetriveHistoryEntries_OneHistoryEntry_ReturnsOneHistoryEntry() {
             var historyEntry = CreateHistoryEntry();
-            _localization.Setup(c => c.History())
+            _localization.Setup(c => c.RetriveHistory())
                          .Returns(new List<HistoryEntry> {
                                                              historyEntry
                                                          });

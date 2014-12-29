@@ -9,7 +9,7 @@ namespace Core {
                                       ILocalization currentLocalization) {
             string difference = string.Empty;
             difference += LanguageDifference(previousLocalization.Languages,
-                                             currentLocalization.Languages()
+                                             currentLocalization.RetriveLanguages()
                                                                 .ToList());
             
             return difference;

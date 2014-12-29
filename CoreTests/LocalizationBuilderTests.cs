@@ -31,15 +31,22 @@ namespace CoreTests {
             var historyEntry = new HistoryEntry(_date,
                                                 Comment);
 
-            var loadedLocalization = CreateLoadedLocalization(new List<Language> {language},
-                                             new List<HistoryEntry> {historyEntry});
+            var loadedLocalization = CreateLoadedLocalization(new List<Area>(),
+                                                              new List<LocalizationKey>(),
+                                                              new List<LocalizedText>(),
+                                                              new List<Language> {
+                                                                                     language
+                                                                                 },
+                                                              new List<HistoryEntry> {
+                                                                                         historyEntry
+                                                                                     });
 
             var builder = new LocalizationBuilder();
             var localization = builder.Build(loadedLocalization);
 
-            var copiedLanguage = localization.Languages()
+            var copiedLanguage = localization.RetriveLanguages()
                                              .First();
-            var copiedHistoryEntry = localization.History()
+            var copiedHistoryEntry = localization.RetriveHistory()
                                                  .First();
 
             Assert.AreNotSame(language,
@@ -59,9 +66,15 @@ namespace CoreTests {
 
         }
 
-        private ILoadedLocalization CreateLoadedLocalization(List<Language> languages,
+        private ILoadedLocalization CreateLoadedLocalization(List<Area> areas,
+                                                             List<LocalizationKey> keys,
+                                                             List<LocalizedText> texts,
+                                                             List<Language> languages,
                                                              List<HistoryEntry> entries) {
             return new LoadedLocalization(string.Empty,
+                                          areas,
+                                          keys,
+                                          texts,
                                           languages,
                                           entries);
         }

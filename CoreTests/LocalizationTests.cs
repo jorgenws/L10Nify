@@ -28,7 +28,7 @@ namespace CoreTests {
 
             localization.AddLanguage(language);
 
-            CollectionAssert.Contains(localization.Languages(),
+            CollectionAssert.Contains(localization.RetriveLanguages(),
                                       language);
         }
 
@@ -53,7 +53,7 @@ namespace CoreTests {
 
             localization.RemoveLanguage(_languageId);
 
-            CollectionAssert.DoesNotContain(localization.Languages(),
+            CollectionAssert.DoesNotContain(localization.RetriveLanguages(),
                                             language);
         }
 
@@ -63,7 +63,7 @@ namespace CoreTests {
 
             localization.RemoveLanguage(_languageId);
 
-            CollectionAssert.IsEmpty(localization.Languages());
+            CollectionAssert.IsEmpty(localization.RetriveLanguages());
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace CoreTests {
 
             localization.AddArea(area);
 
-            CollectionAssert.Contains(localization.Areas(), area);
+            CollectionAssert.Contains(localization.RetriveAreas(), area);
         }
 
         [Test]
@@ -94,7 +94,7 @@ namespace CoreTests {
             localization.AddArea(area);
             localization.RemoveArea(area.Id);
 
-            CollectionAssert.DoesNotContain(localization.Areas(),
+            CollectionAssert.DoesNotContain(localization.RetriveAreas(),
                                             area);
         }
 
@@ -114,7 +114,7 @@ namespace CoreTests {
             var localization = CreateLocalization();
             localization.AddArea(area);
             localization.AddLocalizedKey(localizationKey);
-            CollectionAssert.Contains(localization.Keys(), localizationKey);
+            CollectionAssert.Contains(localization.RetriveKeys(), localizationKey);
         }
 
         [Test]
@@ -126,7 +126,7 @@ namespace CoreTests {
             localization.AddArea(area);
             localization.AddLocalizedKey(localizedItem);
             localization.RemoveLocalizationKey(localizedItem.Id);
-            CollectionAssert.DoesNotContain(localization.Keys(),
+            CollectionAssert.DoesNotContain(localization.RetriveKeys(),
                                             localizedItem);
         }
 
@@ -165,7 +165,7 @@ namespace CoreTests {
             localization.AddLocalizedText(area.Id,
                                           text);
 
-            CollectionAssert.Contains(localization.Texts(),
+            CollectionAssert.Contains(localization.RetriveTexts(),
                                       text);
         }
 
@@ -183,7 +183,7 @@ namespace CoreTests {
                                           text);
             localization.RemoveLocalizedText(text.Id);
 
-            CollectionAssert.DoesNotContain(localization.Texts(),
+            CollectionAssert.DoesNotContain(localization.RetriveTexts(),
                                             text);
         }
 

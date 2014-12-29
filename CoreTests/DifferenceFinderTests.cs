@@ -22,7 +22,7 @@ namespace CoreTests {
         public void LanguageDifference_AddedOneLanguage_CorrectText() {
             _loadedLocalization.Setup(c => c.Languages)
                                .Returns(new List<Language>());
-            _localization.Setup(c => c.Languages())
+            _localization.Setup(c => c.RetriveLanguages())
                          .Returns(new List<Language> {
                                                          CreateLanguage()
                                                      });
@@ -42,7 +42,7 @@ namespace CoreTests {
                                                          CreateLanguage()
                                                      });
                                
-            _localization.Setup(c => c.Languages())
+            _localization.Setup(c => c.RetriveLanguages())
                          .Returns(new List<Language>());
 
             var differenceFinder = new DifferenceFinder();
@@ -62,7 +62,7 @@ namespace CoreTests {
                                                            });
             var currentLanguage = CreateLanguage();
             currentLanguage.DisplayName = "test";
-            _localization.Setup(c => c.Languages())
+            _localization.Setup(c => c.RetriveLanguages())
                          .Returns(new List<Language> {
                                                          currentLanguage
                                                      });

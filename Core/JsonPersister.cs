@@ -7,9 +7,16 @@ namespace Core {
         public void Write(string filePath,
                           ILocalization localization) {
             var persitance = new LocalizationPersistance {
-                                                             Languages = localization.Languages()
+                                                             Areas = localization.RetriveAreas()
+                                                                                 .ToArray(),
+                                                             Keys = localization.RetriveKeys()
+                                                                                .ToArray(),
+                                                             Texts = localization.RetriveTexts()
+                                                                                 .ToArray(),
+
+                                                             Languages = localization.RetriveLanguages()
                                                                                      .ToArray(),
-                                                             HistoryEntries = localization.History()
+                                                             HistoryEntries = localization.RetriveHistory()
                                                                                           .ToArray()
                                                          };
 

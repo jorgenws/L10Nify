@@ -8,6 +8,23 @@ namespace Core {
 
             var localization = new Localization();
 
+            foreach (var area in loadedLocalization.Areas) {
+                var copy = CopyArea(area);
+                localization.AddArea(copy);
+            }
+
+            foreach (var key in loadedLocalization.Keys) {
+                var copy = CopyKey(key);
+                localization.AddLocalizedKey(copy);
+            }
+
+            foreach (var text in loadedLocalization.Texts) {
+                var copy = CopyText(text);
+                var key = localization.RetriveKey(copy.KeyId);
+                localization.AddLocalizedText(key.AreaId,
+                                              copy);
+            }
+
             foreach (Language language in loadedLocalization.Languages) {
                 var copy = CopyLanguage(language);
                 localization.AddLanguage(copy);
@@ -19,6 +36,30 @@ namespace Core {
             }
 
             return localization;
+        }
+
+        private LocalizedText CopyText(LocalizedText text) {
+            return new LocalizedText {
+                                         Id = text.Id,
+                                         Value = text.Value,
+                                         LanguageId = text.LanguageId,
+                                         KeyId = text.KeyId
+                                     };
+        }
+
+        private LocalizationKey CopyKey(LocalizationKey key) {
+            return new LocalizationKey {
+                                           Id = key.Id,
+                                           Key = key.Key,
+                                           AreaId = key.AreaId
+                                       };
+        }
+
+        private Area CopyArea(Area area) {
+            return new Area {
+                                Id = area.Id,
+                                Name = area.Name
+                            };
         }
 
         private Language CopyLanguage(Language language) {

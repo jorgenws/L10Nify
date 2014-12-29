@@ -46,11 +46,11 @@ namespace Core {
         }
 
         public IEnumerable<Language> RetriveLanguages() {
-            return _localization.Languages();
+            return _localization.RetriveLanguages();
         }
 
         public IEnumerable<HistoryEntry> RetriveHistoryEntries() {
-            return _localization.History();
+            return _localization.RetriveHistory();
         }
 
         public void Save() {
@@ -69,6 +69,9 @@ namespace Core {
 
         public void New() {
             _loadedLocalization = new LoadedLocalization(string.Empty,
+                                                         new List<Area>(),
+                                                         new List<LocalizationKey>(),
+                                                         new List<LocalizedText>(),
                                                          new List<Language>(),
                                                          new List<HistoryEntry>());
             _localization = _localizationBuilder.Build(_loadedLocalization);
