@@ -46,6 +46,10 @@ namespace Core {
                                          newName);
         }
 
+        public void RemoveArea(Guid areaId) {
+            _localization.RemoveArea(areaId);
+        }
+
         public void AddLocalizationKey(Guid areaId,
                                        string key) {
             var localizationKey = _localizationKeyFactory.Create(areaId,
@@ -57,6 +61,10 @@ namespace Core {
                                               string newKey) {
             _localization.ChangeKeyName(localizationKeyId,
                                         newKey);
+        }
+
+        public void RemoveLocalizationKey(Guid keyId) {
+            _localization.RemoveLocalizationKey(keyId);
         }
 
         public void AddLocalizedText(Guid areaId,
@@ -76,6 +84,10 @@ namespace Core {
                                      newText);
         }
 
+        public void RemoveLocalizedText(Guid textId) {
+            _localization.RemoveLocalizedText(textId);
+        }
+
         public void AddLanguage(Guid id,
                                 string isoName,
                                 string displayName) {
@@ -83,6 +95,12 @@ namespace Core {
                                                    isoName,
                                                    displayName);
             _localization.AddLanguage(language);
+        }
+
+        public void ChangeLanguageDisplayName(Guid languageId,
+                                              string newDisplayName) {
+            _localization.ChangeLanguageDisplayName(languageId,
+                                                    newDisplayName);
         }
 
         public void RemoveLanguage(Guid id) {

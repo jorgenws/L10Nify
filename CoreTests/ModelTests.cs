@@ -24,6 +24,7 @@ namespace CoreTests {
 
         private readonly Guid _areaId = Guid.Parse("{357122ED-F1E4-4B8A-85E2-187DEEFB333F}");
         private readonly Guid _keyId = Guid.Parse("{BBE95265-4769-4C7D-B0BE-EAA1B92E8F6C}");
+        private readonly Guid _textId = Guid.Parse("{CF648E27-8854-4687-B263-EDEA70EC1314}");
 
         [SetUp]
         public void SetUp() {
@@ -55,6 +56,16 @@ namespace CoreTests {
                               DisplayName);
 
             _localization.Verify(c => c.AddLanguage(language));
+        }
+
+        [Test]
+        public void ChangeLanguageDisplayName_IsOk_ChangedToLocalization() {
+            const string newDisplayName = "displayName";
+            var model = CreateDefaultModel();
+            model.ChangeLanguageDisplayName(_languageId,
+                                            newDisplayName);
+            _localization.Setup(c => c.ChangeLanguageDisplayName(_languageId,
+                                                                 newDisplayName));
         }
 
         [Test]
@@ -180,6 +191,27 @@ namespace CoreTests {
 
             _localization.Verify(c => c.ChangeText(_areaId,
                                                    text));
+        }
+
+        [Test]
+        public void RemoveArea_IsOk_RemovedFromLocalization() {
+            var model = CreateDefaultModel();
+            model.RemoveArea(_areaId);
+            _localization.Verify(c => c.RemoveArea(_areaId));
+        }
+
+        [Test]
+        public void RemoveLocalizationKey_IsOk_RemovedFromLocalization() {
+            var model = CreateDefaultModel();
+            model.RemoveLocalizationKey(_keyId);
+            _localization.Verify(c => c.RemoveLocalizationKey(_keyId));
+        }
+
+        [Test]
+        public void RemoveLocalizedText_IsOk_RemovedFromLocalization() {
+            var model = CreateDefaultModel();
+            model.RemoveLocalizedText(_textId);
+            _localization.Verify(c => c.RemoveLocalizedText(_textId));
         }
 
         private Model CreateDefaultModel() {
