@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Core;
 using NUnit.Framework;
 
@@ -100,31 +99,31 @@ namespace CoreTests {
 
         [Test]
         public void AddLocalizedItem_NoMatchingArea_ThrowsException() {
-            var localizationKey = CreateDefaultCLocalizedItem();
+            var localizationKey = CreateDefaultLocalizationKey();
             var localization = CreateLocalization();
 
-            Assert.Throws<Exception>(() => localization.AddLocalizedKey(localizationKey));
+            Assert.Throws<Exception>(() => localization.AddLocalizationKey(localizationKey));
         }
 
         [Test]
         public void AddLocalizedItem_HasArea_IsAdded() {
             var area = CreateDefaultArea();
-            var localizationKey = CreateDefaultCLocalizedItem();
+            var localizationKey = CreateDefaultLocalizationKey();
 
             var localization = CreateLocalization();
             localization.AddArea(area);
-            localization.AddLocalizedKey(localizationKey);
+            localization.AddLocalizationKey(localizationKey);
             CollectionAssert.Contains(localization.RetriveKeys(), localizationKey);
         }
 
         [Test]
         public void RemoveLocalizedItem_ItemExists_IsRemoved() {
             var area = CreateDefaultArea();
-            var localizedItem = CreateDefaultCLocalizedItem();
+            var localizedItem = CreateDefaultLocalizationKey();
 
             var localization = CreateLocalization();
             localization.AddArea(area);
-            localization.AddLocalizedKey(localizedItem);
+            localization.AddLocalizationKey(localizedItem);
             localization.RemoveLocalizationKey(localizedItem.Id);
             CollectionAssert.DoesNotContain(localization.RetriveKeys(),
                                             localizedItem);
@@ -155,13 +154,13 @@ namespace CoreTests {
         [Test]
         public void AddLocalizedText_IsOk_IsAdded() {
             var area = CreateDefaultArea();
-            var key = CreateDefaultCLocalizedItem();
+            var key = CreateDefaultLocalizationKey();
             var text = CreateDefaultLocalizedText();
 
             var localization = CreateLocalization();
 
             localization.AddArea(area);
-            localization.AddLocalizedKey(key);
+            localization.AddLocalizationKey(key);
             localization.AddLocalizedText(area.Id,
                                           text);
 
@@ -172,19 +171,113 @@ namespace CoreTests {
         [Test]
         public void RemoveLocalizationText_RemoveAText_IsRemoved() {
             var area = CreateDefaultArea();
-            var item = CreateDefaultCLocalizedItem();
+            var item = CreateDefaultLocalizationKey();
             var text = CreateDefaultLocalizedText();
 
             var localization = CreateLocalization();
 
             localization.AddArea(area);
-            localization.AddLocalizedKey(item);
+            localization.AddLocalizationKey(item);
             localization.AddLocalizedText(area.Id,
                                           text);
             localization.RemoveLocalizedText(text.Id);
 
             CollectionAssert.DoesNotContain(localization.RetriveTexts(),
                                             text);
+        }
+
+        [Test]
+        public void ChangeAreaName_AreaDoesNotExist_ThrowsException() {
+            var localization = CreateLocalization();
+            Assert.Throws<Exception>(() => localization.ChangeAreaName(_areaId,
+                                                                       "test"));
+        }
+
+        [Test]
+        public void ChangeAreaName_AreExists_AreaNameIsChanged() {
+            const string newAreaName = "area51";
+            var area = CreateDefaultArea();
+
+            var localization = CreateLocalization();
+            localization.AddArea(area);
+
+            localization.ChangeAreaName(area.Id,
+                                        newAreaName);
+
+            Assert.AreEqual(newAreaName,
+                            area.Name);
+        }
+
+        [Test]
+        public void ChangeKeyName_KeyDoesNotExist_ThrowsException() {
+            var localization = CreateLocalization();
+            Assert.Throws<Exception>(() => localization.ChangeKeyName(_areaId,
+                                                                      "test"));
+        }
+
+        [Test]
+        public void ChangeKeyName_KeyExist_KeyIdChanged() {
+            const string newKey = "skeleton key";
+            var area = CreateDefaultArea();
+            var key = CreateDefaultLocalizationKey();
+
+            var localization = CreateLocalization();
+            localization.AddArea(area);
+            localization.AddLocalizationKey(key);
+
+            localization.ChangeKeyName(key.Id,
+                                       newKey);
+            Assert.AreEqual(newKey,
+                            key.Key);
+        }
+
+        [Test]
+        public void ChangeText_TextDoesNotExist_ThrowsException() {
+            var localization = CreateLocalization();
+            Assert.Throws<Exception>(() => localization.ChangeText(_textId,
+                                                                   "test"));
+        }
+
+        [Test]
+        public void ChangeText_TextExists_TextIsChanged() {
+            const string newText = "new text";
+            var area = CreateDefaultArea();
+            var key = CreateDefaultLocalizationKey();
+            var text = CreateDefaultLocalizedText();
+
+            var localization = CreateLocalization();
+            localization.AddArea(area);
+            localization.AddLocalizationKey(key);
+            localization.AddLocalizedText(area.Id,
+                                          text);
+
+            localization.ChangeText(text.Id,
+                                    newText);
+
+            Assert.AreEqual(newText,
+                            text.Value);
+        }
+
+        [Test]
+        public void ChangeLanguageDisplayName_LanguageDoesNotExist_ThrowsException() {
+            var localization = CreateLocalization();
+            Assert.Throws<Exception>(() => localization.ChangeLanguageDisplayName(_languageId,
+                                                                                  "test"));
+        }
+
+        [Test]
+        public void ChangeLanguageDisplayName_LanguageExists_LanguageDisplayNameChanged() {
+            const string newDisplayName = "newDisplayName";
+            var language = CreateDefaultLanguage();
+            var localization = CreateLocalization();
+
+            localization.AddLanguage(language);
+
+            localization.ChangeLanguageDisplayName(language.Id,
+                                                   newDisplayName);
+
+            Assert.AreEqual(newDisplayName,
+                            language.DisplayName);
         }
 
         private Localization CreateLocalization() {
@@ -206,7 +299,7 @@ namespace CoreTests {
                             };
         }
 
-        private LocalizationKey CreateDefaultCLocalizedItem() {
+        private LocalizationKey CreateDefaultLocalizationKey() {
             return new LocalizationKey {
                                          Id = _keyId,
                                          Key = ItemKey,

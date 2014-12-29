@@ -27,6 +27,14 @@ namespace Core {
                       area);
         }
 
+        public void ChangeAreaName(Guid areaId,
+                                   string newAreaName) {
+            if (!_area.ContainsKey(areaId))
+                throw new Exception("Area does not exist");
+
+            _area[areaId].Name = newAreaName;
+        }
+
         public void RemoveArea(Guid areaId) {
             if (_area.ContainsKey(areaId)) {
                 _area.Remove(areaId);
@@ -45,7 +53,7 @@ namespace Core {
             }
         }
 
-        public void AddLocalizedKey(LocalizationKey key) {
+        public void AddLocalizationKey(LocalizationKey key) {
             if (!_area.ContainsKey(key.AreaId))
                 throw new Exception("Cannot find area");
 
@@ -53,6 +61,14 @@ namespace Core {
                 throw new Exception("Cannot add more the one key with the same name");
 
             _keys.Add(key.Id, key);
+        }
+
+        public void ChangeKeyName(Guid keyId,
+                                  string newKeyName) {
+            if (!_keys.ContainsKey(keyId))
+                throw new Exception("Key does not exist");
+
+            _keys[keyId].Key = newKeyName;
         }
 
         public void RemoveLocalizationKey(Guid keyId) {
@@ -83,6 +99,14 @@ namespace Core {
                        text);
         }
 
+        public void ChangeText(Guid textId,
+                                    string newText) {
+            if (!_texts.ContainsKey(textId))
+                throw new Exception("Text does not exist");
+
+            _texts[textId].Value = newText;
+        }
+
         public void RemoveLocalizedText(Guid localizedTextId) {
             if (_texts.ContainsKey(localizedTextId))
                 _texts.Remove(localizedTextId);
@@ -93,6 +117,14 @@ namespace Core {
                 throw new Exception("Cannot add more then one language with the same id");
 
             _languages.Add(language.Id, language);
+        }
+
+        public void ChangeLanguageDisplayName(Guid languageId,
+                                              string newDisplayName) {
+            if (!_languages.ContainsKey(languageId))
+                throw new Exception("Language does not exist");
+
+            _languages[languageId].DisplayName = newDisplayName;
         }
 
         public void RemoveLanguage(Guid languageId) {
@@ -113,6 +145,10 @@ namespace Core {
 
         public IEnumerable<Area> RetriveAreas() {
             return _area.Values;
+        }
+
+        public Area RetriveArea(Guid areaId) {
+            return _area[areaId];
         }
 
         public IEnumerable<LocalizationKey> RetriveKeys() {
@@ -148,16 +184,25 @@ namespace Core {
 
     public interface ILocalization {
         void AddArea(Area area);
+        void ChangeAreaName(Guid areaId,
+                            string newAreaName);
         void RemoveArea(Guid areaId);
-        void AddLocalizedKey(LocalizationKey key);
+        void AddLocalizationKey(LocalizationKey key);
+        void ChangeKeyName(Guid keyId,
+                           string newKeyName);
         void RemoveLocalizationKey(Guid itemId);
         void AddLocalizedText(Guid areaId,
                               LocalizedText text);
+        void ChangeText(Guid textId,
+                             string newText);
         void RemoveLocalizedText(Guid localizedTextId);
         void AddLanguage(Language language);
+        void ChangeLanguageDisplayName(Guid languageId,
+                                       string newDisplayName);
         void RemoveLanguage(Guid languageId);
         void AddHistoryEntry(HistoryEntry entry);
         IEnumerable<Area> RetriveAreas();
+        Area RetriveArea(Guid areaId);
         IEnumerable<LocalizationKey> RetriveKeys();
         LocalizationKey RetriveKey(Guid keyId);
         IEnumerable<LocalizedText> RetriveTexts();

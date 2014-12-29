@@ -15,7 +15,7 @@ namespace Core {
 
             foreach (var key in loadedLocalization.Keys) {
                 var copy = CopyKey(key);
-                localization.AddLocalizedKey(copy);
+                localization.AddLocalizationKey(copy);
             }
 
             foreach (var text in loadedLocalization.Texts) {
