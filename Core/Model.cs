@@ -26,6 +26,12 @@ namespace Core {
             New();
         }
 
+        public void AddArea(string name) {
+            
+        }
+
+        
+
         public void AddLanguage(Guid id,
                                 string isoName,
                                 string displayName) {
