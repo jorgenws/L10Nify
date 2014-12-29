@@ -140,8 +140,78 @@ namespace CoreTests {
                                             localizedItem);
         }
 
+        [Test]
+        public void AddLocalizedText_AreaDoesNotExits_ThrowsException() {
+            var localizedText = CreateDefaultLocalizedText();
+
+            var localization = CreateLocalization();
+
+            Assert.Throws<Exception>(() => localization.AddLocalizedText(_areaId,
+                                                                         _itemId,
+                                                                         localizedText));
+        }
+
+        [Test]
+        public void AddLocalizedText_ItemDoesNotExist_ThrowsException() {
+            var area = CreateDefaultArea();
+            var localizedText = CreateDefaultLocalizedText();
+
+            var localization = CreateLocalization();
+            localization.AddArea(area);
+
+            Assert.Throws<Exception>(() => localization.AddLocalizedText(_areaId,
+                                                                         _itemId,
+                                                                         localizedText));
+        }
+
+        [Test]
+        public void AddLocalizedText_IsOk_IsAdded() {
+            var area = CreateDefaultArea();
+            var item = CreateDefaultCLocalizedItem();
+            var text = CreateDefaultLocalizedText();
+
+            var localization = CreateLocalization();
+
+            localization.AddArea(area);
+            localization.AddLocalizedItem(area.Id,
+                                          item);
+            localization.AddLocalizedText(area.Id,
+                                          item.Id,
+                                          text);
+
+            CollectionAssert.Contains(localization.Areas()
+                                                  .First()
+                                                  .Items.First()
+                                                  .Texts,
+                                      text);
+        }
+
+        [Test]
+        public void RemoveLocalizationText_RemoveAText_IsRemoved() {
+            var area = CreateDefaultArea();
+            var item = CreateDefaultCLocalizedItem();
+            var text = CreateDefaultLocalizedText();
+
+            var localization = CreateLocalization();
+
+            localization.AddArea(area);
+            localization.AddLocalizedItem(area.Id,
+                                          item);
+            localization.AddLocalizedText(area.Id,
+                                          item.Id,
+                                          text);
+            localization.RemoveLocalizedText(area.Id,
+                                             item.Id,
+                                             text.Id);
+
+            CollectionAssert.DoesNotContain(localization.Areas()
+                                                        .First()
+                                                        .Items.First()
+                                                        .Texts,
+                                            text);
+        }
+
         //ToDo: Tests for add and remove localizedText
-        //Then extend the difference finder
         //Then extend the json persister and loader
         
         private Localization CreateLocalization() {
