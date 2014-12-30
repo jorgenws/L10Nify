@@ -70,7 +70,7 @@ namespace CoreTests {
 
         [Test]
         public void RemoveLanguage_RemovingLanguage_LanguageIsRemoved() {
-           var model = CreateDefaultModel();
+            var model = CreateDefaultModel();
             model.RemoveLanguage(_languageId);
 
             _localization.Verify(c => c.RemoveLanguage(_languageId));
@@ -112,12 +112,14 @@ namespace CoreTests {
         public void AddArea_IsOk_AddedToLocalization() {
             const string areaName = "name";
             var area = CreateDefaultArea();
-            _areaFactory.Setup(c => c.Create(areaName))
+            _areaFactory.Setup(c => c.Create(_areaId,
+                                             areaName))
                         .Returns(area);
 
             var model = CreateDefaultModel();
 
-            model.AddArea(areaName);
+            model.AddArea(_areaId,
+                          areaName);
 
             _localization.Verify(c => c.AddArea(area));
         }
@@ -139,12 +141,15 @@ namespace CoreTests {
             const string localizationKeyName = "name";
             var key = CreateDefaultLocalizationKey();
             _localizationKeyFactory.Setup(c => c.Create(_areaId,
+                                                        _keyId,
                                                         localizationKeyName))
                                    .Returns(key);
 
             var model = CreateDefaultModel();
 
-            model.AddLocalizationKey(_areaId, localizationKeyName);
+            model.AddLocalizationKey(_areaId,
+                                     _keyId,
+                                     localizationKeyName);
 
             _localization.Verify(c => c.AddLocalizationKey(key));
         }
@@ -165,7 +170,8 @@ namespace CoreTests {
         public void AddLocalizedText_IsOk_AddedToLocalization() {
             const string text = "name";
             var localizedText = CreateDefaultLocalizedText();
-            _localizedTextFactory.Setup(c => c.Create(_keyId,
+            _localizedTextFactory.Setup(c => c.Create(_textId,
+                                                      _keyId,
                                                       _languageId,
                                                       text))
                                  .Returns(localizedText);
@@ -174,6 +180,7 @@ namespace CoreTests {
 
             model.AddLocalizedText(_areaId,
                                    _keyId,
+                                   _textId,
                                    _languageId,
                                    text);
 

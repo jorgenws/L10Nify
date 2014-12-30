@@ -2,16 +2,13 @@
 
 namespace Core {
     public class LocalizationKeyFactory : ILocalizationKeyFactory {
-        private readonly IGuidGenerator _guidGenerator;
-
-        public LocalizationKeyFactory(IGuidGenerator guidGenerator) {
-            _guidGenerator = guidGenerator;
-        }
-
         public LocalizationKey Create(Guid areaId,
+                                      Guid keyId,
                                       string key) {
             if (areaId == Guid.Empty)
                 throw new NotSupportedException("There must be a area id set");
+            if (keyId == Guid.Empty)
+                throw new NotSupportedException("There must be a localization key id set");
 
             if (key == null)
                 key = string.Empty;
@@ -19,7 +16,7 @@ namespace Core {
             key = key.Trim();
 
             return new LocalizationKey {
-                                           Id = _guidGenerator.Next(),
+                                           Id = keyId,
                                            Key = key,
                                            AreaId = areaId
                                        };
@@ -28,6 +25,7 @@ namespace Core {
 
     public interface ILocalizationKeyFactory {
         LocalizationKey Create(Guid areaId,
+                               Guid keyId,
                                string key);
     }
 }

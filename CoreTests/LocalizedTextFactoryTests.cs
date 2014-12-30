@@ -1,29 +1,30 @@
 ﻿using System;
 using Core;
-using Moq;
 using NUnit.Framework;
 
 namespace CoreTests {
     [TestFixture]
     public class LocalizedTextFactoryTests {
-        private Mock<IGuidGenerator> _guidGenerator;
-
         private readonly Guid _id = Guid.Parse("{D6C6C702-BCA7-4A26-8981-6B5955A41C7A}");
         private readonly Guid _keyId = Guid.Parse("{869FF43C-D26A-4E84-85F5-C3407E9AD72E}");
         private readonly Guid _languageId = Guid.Parse("{CD029CE1-EE43-45BD-887A-4352333DFC2A}");
 
-        [SetUp]
-        public void SetUp() {
-            _guidGenerator = new Mock<IGuidGenerator>();
-            _guidGenerator.Setup(c => c.Next())
-                          .Returns(_id);
+        [Test]
+        public void Create_TextIdIsEmpty_ThrowsNotSupportedException() {
+            var factory = CreateDefaultLocalizedTextFactory();
+
+            Assert.Throws<NotSupportedException>(() => factory.Create(Guid.Empty,
+                                                                      _keyId,
+                                                                      _languageId,
+                                                                      "test"));
         }
 
         [Test]
         public void Create_KeyIdIsEmpty_ThrowsNotSupportedException() {
             var factory = CreateDefaultLocalizedTextFactory();
 
-            Assert.Throws<NotSupportedException>(() => factory.Create(Guid.Empty,
+            Assert.Throws<NotSupportedException>(() => factory.Create(_id,
+                                                                      Guid.Empty,
                                                                       _languageId,
                                                                       "test"));
         }
@@ -32,7 +33,8 @@ namespace CoreTests {
         public void Create_LanguageIdIsEmpty_ThrowsNotSupportedException() {
             var factory = CreateDefaultLocalizedTextFactory();
 
-            Assert.Throws<NotSupportedException>(() => factory.Create(_keyId,
+            Assert.Throws<NotSupportedException>(() => factory.Create(_id,
+                                                                      _keyId,
                                                                       Guid.Empty,
                                                                       "test"));
         }
@@ -41,7 +43,8 @@ namespace CoreTests {
         public void Create_TextIsNull_LocalizedTextIsEmpty() {
             var factory = CreateDefaultLocalizedTextFactory();
 
-            var result = factory.Create(_keyId,
+            var result = factory.Create(_id,
+                                        _keyId,
                                         _languageId,
                                         null);
 
@@ -54,7 +57,8 @@ namespace CoreTests {
             const string text = "something";
             var factory = CreateDefaultLocalizedTextFactory();
 
-            var result = factory.Create(_keyId,
+            var result = factory.Create(_id,
+                                        _keyId,
                                         _languageId,
                                         text);
 
@@ -68,8 +72,8 @@ namespace CoreTests {
                             result.LanguageId);
         }
 
-        private ILocalizedTextFactory CreateDefaultLocalizedTextFactory() {
-            return new LocalizedTextFactory(_guidGenerator.Object);
+        private LocalizedTextFactory CreateDefaultLocalizedTextFactory() {
+            return new LocalizedTextFactory();
         }
 
     }

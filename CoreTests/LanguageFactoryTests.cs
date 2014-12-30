@@ -10,25 +10,31 @@ namespace CoreTests {
         private const string DisplayName = "Norsk";
 
         [Test]
-        public void Create_IdIsEmpty_ThrowsNotSupportedException() {
-            var factory = new LanguageFactory();
-            Assert.Throws<NotSupportedException>
-                (() => factory.Create
-                           (Guid.Empty,
-                            IsoName,
-                            DisplayName));
+        public void Create_LanguageIdIsEmpty_ThrowsNotSupportedException() {
+            var factory = CreateLanguageFactory();
+
+            Assert.Throws<NotSupportedException>(() => factory.Create(Guid.Empty,
+                                                                      IsoName,
+                                                                      DisplayName));
         }
 
         [Test]
         public void Create_HasValidArguments_CreatesLanguage() {
-            var factory = new LanguageFactory();
+            var factory = CreateLanguageFactory();
 
             var language = factory.Create(_id,
                                           IsoName,
                                           DisplayName);
-            Assert.AreEqual(_id, language.Id);
-            Assert.AreEqual(IsoName, language.IsoName);
-            Assert.AreEqual(DisplayName, language.DisplayName);
+            Assert.AreEqual(_id,
+                            language.Id);
+            Assert.AreEqual(IsoName,
+                            language.IsoName);
+            Assert.AreEqual(DisplayName,
+                            language.DisplayName);
+        }
+
+        private LanguageFactory CreateLanguageFactory() {
+            return new LanguageFactory();
         }
     }
 }

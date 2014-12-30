@@ -2,18 +2,14 @@
 
 namespace Core {
     public class LocalizedTextFactory : ILocalizedTextFactory {
-        private readonly IGuidGenerator _guidGenerator;
-        
-        public LocalizedTextFactory(IGuidGenerator guidGenerator) {
-            _guidGenerator = guidGenerator;
-        }
-
-        public LocalizedText Create(Guid keyId,
+        public LocalizedText Create(Guid textId,
+                                    Guid keyId,
                                     Guid languageid,
                                     string text) {
-            if(keyId == Guid.Empty)
+            if (textId == Guid.Empty)
+                throw new NotSupportedException("Must have a text id");
+            if (keyId == Guid.Empty)
                 throw new NotSupportedException("Must have a key id");
-
             if (languageid == Guid.Empty)
                 throw new NotSupportedException("Must have a language id");
 
@@ -21,7 +17,7 @@ namespace Core {
                 text = string.Empty;
 
             return new LocalizedText {
-                                         Id = _guidGenerator.Next(),
+                                         Id = textId,
                                          KeyId = keyId,
                                          LanguageId = languageid,
                                          Text = text
@@ -30,7 +26,8 @@ namespace Core {
     }
 
     public interface ILocalizedTextFactory {
-        LocalizedText Create(Guid keyId,
+        LocalizedText Create(Guid textId,
+                             Guid keyId,
                              Guid languageid,
                              string text);
     }

@@ -177,6 +177,13 @@ namespace Core {
             return _languages.Values;
         }
 
+        public Language RetriveLanguage(Guid languageId) {
+            if (_languages.ContainsKey(languageId))
+                return _languages[languageId];
+
+            return null;
+        }
+
         public IEnumerable<HistoryEntry> RetriveHistory() {
             return _historyEntries;
         }
@@ -208,6 +215,7 @@ namespace Core {
         IEnumerable<LocalizedText> RetriveTexts();
         LocalizedText RetiveText(Guid textId);
         IEnumerable<Language> RetriveLanguages();
+        Language RetriveLanguage(Guid languageId);
         IEnumerable<HistoryEntry> RetriveHistory();
     }
 

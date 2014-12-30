@@ -35,8 +35,8 @@ namespace Core {
             New();
         }
 
-        public void AddArea(string name) {
-            var area = _areaFactory.Create(name);
+        public void AddArea(Guid areaId, string name) {
+            var area = _areaFactory.Create(areaId, name);
             _localization.AddArea(area);
         }
 
@@ -51,8 +51,10 @@ namespace Core {
         }
 
         public void AddLocalizationKey(Guid areaId,
+                                       Guid keyId,
                                        string key) {
             var localizationKey = _localizationKeyFactory.Create(areaId,
+                                                                 keyId,
                                                                  key);
             _localization.AddLocalizationKey(localizationKey);
         }
@@ -69,9 +71,11 @@ namespace Core {
 
         public void AddLocalizedText(Guid areaId,
                                      Guid keyId,
+                                     Guid textId,
                                      Guid languageId,
                                      string text) {
-            var localizedText = _localizedTextFactory.Create(keyId,
+            var localizedText = _localizedTextFactory.Create(textId,
+                                                             keyId,
                                                              languageId,
                                                              text);
             _localization.AddLocalizedText(areaId,
@@ -88,10 +92,10 @@ namespace Core {
             _localization.RemoveLocalizedText(textId);
         }
 
-        public void AddLanguage(Guid id,
+        public void AddLanguage(Guid languageId,
                                 string isoName,
                                 string displayName) {
-            var language = _languageFactory.Create(id,
+            var language = _languageFactory.Create(languageId,
                                                    isoName,
                                                    displayName);
             _localization.AddLanguage(language);
@@ -111,16 +115,32 @@ namespace Core {
             return _localization.RetriveAreas();
         }
 
+        public Area RetriveArea(Guid areaId) {
+            return _localization.RetriveArea(areaId);
+        }
+
         public IEnumerable<LocalizationKey> RetriveLocalizationKeys() {
             return _localization.RetriveKeys();
+        }
+
+        public LocalizationKey RetriveLocalizationKey(Guid localizationKeyId) {
+            return _localization.RetriveKey(localizationKeyId);
         }
 
         public IEnumerable<LocalizedText> RetriveLocalizedTexts() {
             return _localization.RetriveTexts();
         }
 
+        public LocalizedText RetriveLocalizedText(Guid localizedTextId) {
+            return _localization.RetiveText(localizedTextId);
+        }
+
         public IEnumerable<Language> RetriveLanguages() {
             return _localization.RetriveLanguages();
+        }
+
+        public Language RetriveLanguage(Guid languageId) {
+            return _localization.RetriveLanguage(languageId);
         }
 
         public IEnumerable<HistoryEntry> RetriveHistoryEntries() {

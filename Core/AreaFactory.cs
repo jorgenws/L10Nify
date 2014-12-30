@@ -2,26 +2,25 @@
 
 namespace Core {
     public class AreaFactory : IAreaFactory {
-        private readonly IGuidGenerator _guidGenerator;
+        public Area Create(Guid areaId,
+                           string name) {
+            if (areaId == Guid.Empty)
+                throw new NotSupportedException("Area id  cannot be empty");
 
-        public AreaFactory(IGuidGenerator guidGenerator) {
-            _guidGenerator = guidGenerator;
-        }
-
-        public Area Create(string name) {
             if (name == null)
                 name = string.Empty;
 
             name = name.Trim();
 
             return new Area {
-                                Id = _guidGenerator.Next(),
+                                Id = areaId,
                                 Name = name
                             };
         }
     }
 
     public interface IAreaFactory {
-        Area Create(string name);
+        Area Create(Guid areaId,
+                    string name);
     }
 }
