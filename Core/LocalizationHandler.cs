@@ -10,7 +10,7 @@ namespace Core {
             _model = model;
         }
 
-        public void Handle(ICommand command) {
+        public void Handle(BaseCommand command) {
             Handle((dynamic) command);
         }
 
@@ -18,6 +18,11 @@ namespace Core {
             _model.AddLanguage(commmand.LanguageId,
                                commmand.IsoName,
                                commmand.DisplayName);
+        }
+
+        private void Handle(ChangeLanguageDisplayNameCommand command) {
+            _model.ChangeLanguageDisplayName(command.LanguageId,
+                                             command.NewDisplayName);
         }
 
         private void Handle(RemoveLanguageCommand command) {
@@ -32,25 +37,77 @@ namespace Core {
                                     command.Text);
         }
 
-        public void Handle(RemoveLocalizedTextCommand command) {
+        private void Handle(ChangeLocalizedTextCommand command) {
+            _model.ChangeLocalizedText(command.TextId,
+                                       command.NewText);
+        }
+
+        private void Handle(RemoveLocalizedTextCommand command) {
             _model.RemoveLocalizedText(command.TextId);
         }
 
+        private void Handle(AddLocalizationKeyCommand command) {
+            _model.AddLocalizationKey(command.AreaId,
+                                      command.KeyId,
+                                      command.KeyName);
+        }
+
+        private void Handle(ChangeLocalizationKeyNameCommand command) {
+            _model.ChangeLocalizationKeyName(command.LocalizationKeyId,
+                                             command.NewKeyName);
+        }
+
+        private void Handle(RemoveLocalizationKeyCommand command) {
+            _model.RemoveLocalizationKey(command.LocalizationKeyId);
+        }
+
+        private void Handle(AddAreaCommand command) {
+            _model.AddArea(command.AreaId,
+                           command.Name);
+        }
+
+        private void Handle(ChangeAreaNameCommand command) {
+            _model.ChangeAreaName(command.AreaId,
+                                  command.NewAreaName);
+        }
+
+        private void Handle(RemoveAreaCommand command) {
+            _model.RemoveArea(command.AreaId);
+        }
+
+        private void Handle(SaveCommand command) {
+            _model.Save();
+        }
+
+        private void Handle(NewCommand command) {
+            _model.New();
+        }
+
+        private void Handle(LoadCommand command) {
+            _model.Load(command.FilePath);
+        }
+
         private void Handle(CommandSequence commands) {
-            foreach (ICommand command in commands.Sequence)
+            foreach (BaseCommand command in commands.Sequence)
                 Handle((dynamic) command);
         }
 
-        public ICommand BuildUndoCommand(ICommand command) {
+        public BaseCommand BuildUndoCommand(BaseCommand command) {
             return BuildUndoCommand((dynamic) command);
         }
 
-        private ICommand BuildUndoCommand(AddLanguageCommand command) {
+        private BaseCommand BuildUndoCommand(AddLanguageCommand command) {
             return new RemoveLanguageCommand(command.LanguageId);
         }
 
-        private ICommand BuildUndoCommand(RemoveLanguageCommand command) {
-            var undoCommands = new List<ICommand>();
+        private BaseCommand BuildUndoCommand(ChangeLanguageDisplayNameCommand command) {
+            var language = _model.RetriveLanguage(command.LanguageId);
+            return new ChangeLanguageDisplayNameCommand(command.LanguageId,
+                                                        language.DisplayName);
+        }
+
+        private BaseCommand BuildUndoCommand(RemoveLanguageCommand command) {
+            var undoCommands = new List<BaseCommand>();
             var language = _model.RetriveLanguage(command.LanguageId);
             var textsThatUsesThisLanguage = _model.RetriveLocalizedTexts()
                                                   .Where(c => c.LanguageId == command.LanguageId)
@@ -71,11 +128,17 @@ namespace Core {
             return new CommandSequence(undoCommands);
         }
 
-        private ICommand BuildUndoCommand(AddLocalizedTextCommand command) {
+        private BaseCommand BuildUndoCommand(AddLocalizedTextCommand command) {
             return new RemoveLocalizedTextCommand(command.TextId);
         }
 
-        private ICommand BuildUndoCommand(RemoveLocalizedTextCommand command) {
+        private BaseCommand BuildUndoCommand(ChangeLocalizedTextCommand command) {
+            var text = _model.RetriveLocalizedText(command.TextId);
+            return new ChangeLocalizedTextCommand(text.Id,
+                                                  text.Text);
+        }
+
+        private BaseCommand BuildUndoCommand(RemoveLocalizedTextCommand command) {
             var text = _model.RetriveLocalizedText(command.TextId);
             var key = _model.RetriveLocalizationKey(text.KeyId);
             return new AddLocalizedTextCommand(key.AreaId,
@@ -85,32 +148,109 @@ namespace Core {
                                                text.Text);
         }
 
-        private ICommand BuildUndoCommand(CommandSequence commands) {
-            var undoCommands = new List<ICommand>();
+        private BaseCommand BuildUndoCommand(AddLocalizationKeyCommand command) {
+            return new RemoveLocalizationKeyCommand(command.KeyId);
+        }
 
-            foreach (ICommand command in commands.Sequence.Reverse())
-                undoCommands.AddRange(BuildUndoCommand((dynamic) command));
+        private BaseCommand BuildUndoCommand(ChangeLocalizationKeyNameCommand command) {
+            var key = _model.RetriveLocalizationKey(command.LocalizationKeyId);
+            return new ChangeLocalizationKeyNameCommand(key.Id,
+                                                    key.Key);
+        }
+
+        private BaseCommand BuildUndoCommand(RemoveLocalizationKeyCommand command) {
+            var sequence = new List<BaseCommand>();
+
+            var key =_model.RetriveLocalizationKey(command.LocalizationKeyId);
+
+            sequence.Add(new AddLocalizationKeyCommand(key.AreaId,
+                                                       key.Id,
+                                                       key.Key));
+
+            var textRenmovalToUndo = _model.RetriveLocalizedTexts()
+                                           .Where(c => c.KeyId == command.LocalizationKeyId)
+                                           .ToList();
+
+            sequence.AddRange(textRenmovalToUndo.Select(text => new AddLocalizedTextCommand(key.AreaId,
+                                                                                            text.KeyId,
+                                                                                            text.Id,
+                                                                                            text.LanguageId,
+                                                                                            text.Text)));
+
+            return new CommandSequence(sequence);
+        }
+
+        private BaseCommand BuildUndoCommand(AddAreaCommand command) {
+            return new RemoveAreaCommand(command.AreaId);
+        }
+
+        private BaseCommand BuildUndoCommand(ChangeAreaNameCommand command) {
+            var area =_model.RetriveArea(command.AreaId);
+            return new ChangeAreaNameCommand(area.Id,
+                                             area.Name);
+        }
+
+        private BaseCommand BuildUndoCommand(RemoveAreaCommand command) {
+            var sequence = new List<BaseCommand>();
+
+            var area = _model.RetriveArea(command.AreaId);
+
+            sequence.Add(new AddAreaCommand(area.Id,
+                                            area.Name));
+
+            var keys = _model.RetriveLocalizationKeys()
+                             .Where(c => c.AreaId == command.AreaId)
+                             .ToDictionary(c => c.Id);
+
+            sequence.AddRange(keys.Values.Select(key => new AddLocalizationKeyCommand(key.AreaId,
+                                                                                      key.Id,
+                                                                                      key.Key)));
+
+            var texts = _model.RetriveLocalizedTexts()
+                              .Where(c => keys.ContainsKey(c.KeyId));
+
+            sequence.AddRange(texts.Select(text => new AddLocalizedTextCommand(area.Id,
+                                                                               text.KeyId,
+                                                                               text.Id,
+                                                                               text.LanguageId,
+                                                                               text.Text)));
+
+            return new CommandSequence(sequence);
+        }
+
+        private BaseCommand BuildUndoCommand(SaveCommand command) {
+            return new NoOpCommand();
+        }
+
+        private BaseCommand BuildUndoCommand(CommandSequence commands) {
+            var undoCommands = commands.Sequence.Select(command => BuildUndoCommand((dynamic) command))
+                                       .Cast<BaseCommand>()
+                                       .ToList();
 
             return new CommandSequence(undoCommands);
         }
     }
 
     public interface ICommandHandler {
-        void Handle(ICommand command);
-        ICommand BuildUndoCommand(ICommand command);
+        void Handle(BaseCommand command);
+        BaseCommand BuildUndoCommand(BaseCommand command);
     }
 
-    public interface ICommand {}
+    public abstract class BaseCommand {
+        public virtual bool ClearStack() {
+            return false;
+        }
+    }
 
-    public class CommandSequence : ICommand {
-        public IEnumerable<ICommand> Sequence { get; private set; }
+    public class CommandSequence : BaseCommand {
+        public IEnumerable<BaseCommand> Sequence { get; private set; }
 
-        public CommandSequence(IEnumerable<ICommand> commands) {
+        public CommandSequence(IEnumerable<BaseCommand> commands) {
             Sequence = commands;
         }
     }
 
-    public class AddLanguageCommand : ICommand {
+    public class AddLanguageCommand : BaseCommand {
         public Guid LanguageId { get; private set; }
         public string IsoName { get; private set; }
         public string DisplayName { get; private set; }
@@ -124,7 +264,17 @@ namespace Core {
         }
     }
 
-    public class RemoveLanguageCommand : ICommand {
+    public class ChangeLanguageDisplayNameCommand : BaseCommand {
+        public Guid LanguageId { get; private set; }
+        public string NewDisplayName { get; private set; }
+
+        public ChangeLanguageDisplayNameCommand(Guid languageId, string newDisplayName) {
+            LanguageId = languageId;
+            NewDisplayName = newDisplayName;
+        }
+    }
+
+    public class RemoveLanguageCommand : BaseCommand {
         public Guid LanguageId { get; private set; }
 
         public RemoveLanguageCommand(Guid languageId) {
@@ -132,7 +282,7 @@ namespace Core {
         }
     }
 
-    public class AddLocalizedTextCommand : ICommand {
+    public class AddLocalizedTextCommand : BaseCommand {
         public Guid AreaId { get; private set; }
         public Guid KeyId { get; private set; }
         public Guid TextId { get; private set; }
@@ -152,11 +302,103 @@ namespace Core {
         }
     }
 
-    public class RemoveLocalizedTextCommand : ICommand {
+    public class ChangeLocalizedTextCommand : BaseCommand {
+        public Guid TextId { get; private set; }
+        public string NewText { get; private set; }
+
+        public ChangeLocalizedTextCommand(Guid textId, string newText) {
+            TextId = textId;
+            NewText = newText;
+        }
+    }
+
+    public class RemoveLocalizedTextCommand : BaseCommand {
         public Guid TextId { get; private set; }
 
         public RemoveLocalizedTextCommand(Guid textId) {
             TextId = textId;
         }
     }
+
+    public class AddLocalizationKeyCommand : BaseCommand {
+        public Guid AreaId { get; private set; }
+        public Guid KeyId { get; private set; }
+        public string KeyName { get; private set; }
+
+        public AddLocalizationKeyCommand(Guid areaId,
+                                         Guid keyId,
+                                         string keyName) {
+            AreaId = areaId;
+            KeyId = keyId;
+            KeyName = keyName;
+        }
+    }
+
+    public class ChangeLocalizationKeyNameCommand : BaseCommand {
+        public Guid LocalizationKeyId { get; private set; }
+        public string NewKeyName { get; private set; }
+
+        public ChangeLocalizationKeyNameCommand(Guid localizationKeyId, string newKeyName) {
+            LocalizationKeyId = localizationKeyId;
+            NewKeyName = newKeyName;
+        }
+    }
+
+    public class RemoveLocalizationKeyCommand : BaseCommand {
+        public Guid LocalizationKeyId { get; private set; }
+
+        public RemoveLocalizationKeyCommand(Guid localizationKeyId) {
+            LocalizationKeyId = localizationKeyId;
+        }
+    }
+
+    public class AddAreaCommand : BaseCommand {
+        public Guid AreaId { get; private set; }
+        public string Name { get; private set; }
+
+        public AddAreaCommand(Guid areaId, string name) {
+            AreaId = areaId;
+            Name = name;
+        }
+    }
+
+    public class ChangeAreaNameCommand : BaseCommand {
+        public Guid AreaId { get; private set; }
+        public string NewAreaName { get; private set; }
+
+        public ChangeAreaNameCommand(Guid areaId, string newAreaName) {
+            AreaId = areaId;
+            NewAreaName = newAreaName;
+        }
+    }
+
+    public class RemoveAreaCommand : BaseCommand {
+        public Guid AreaId { get; private set; }
+
+        public RemoveAreaCommand(Guid areaId) {
+            AreaId = areaId;
+        }
+    }
+
+    public class SaveCommand : BaseCommand {}
+    
+    public class NewCommand : BaseCommand {
+        public override bool ClearStack() {
+            return true;
+        }
+    }
+    
+    public class LoadCommand : BaseCommand {
+        public string FilePath { get; private set; }
+
+        public LoadCommand(string filePath) {
+            FilePath = filePath;
+        }
+
+        public override bool ClearStack() {
+            return true;
+        }
+    }
+
+    public class NoOpCommand : BaseCommand {}
 }
