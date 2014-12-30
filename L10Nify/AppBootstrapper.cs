@@ -1,0 +1,92 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using Caliburn.Micro;
+using Core;
+using Ninject;
+
+namespace L10Nify {
+    public class AppBootstrapper : BootstrapperBase {
+        private StandardKernel _kernel;
+
+        public AppBootstrapper() {
+            Initialize();
+        }
+
+        protected override void Configure() {
+            _kernel = new StandardKernel();
+
+            _kernel.Bind<IWindowManager>()
+                   .To<WindowManager>()
+                   .InSingletonScope();
+            _kernel.Bind<IEventAggregator>()
+                   .To<EventAggregator>()
+                   .InSingletonScope();
+            _kernel.Bind<IShell>()
+                   .To<ShellViewModel>();
+
+            //Core
+            _kernel.Bind<IAreaFactory>()
+                   .To<AreaFactory>()
+                   .InSingletonScope();
+            _kernel.Bind<ILocalizationKeyFactory>()
+                   .To<ILocalizationKeyFactory>()
+                   .InSingletonScope();
+            _kernel.Bind<ILocalizedTextFactory>()
+                   .To<LocalizedTextFactory>()
+                   .InSingletonScope();
+            _kernel.Bind<ILanguageFactory>()
+                   .To<LanguageFactory>()
+                   .InSingletonScope();
+            _kernel.Bind<IHistoryEntryFactory>()
+                   .To<HistoryEntryFactory>()
+                   .InSingletonScope();
+            _kernel.Bind<IDifferenceFinder>()
+                   .To<DifferenceFinder>()
+                   .InSingletonScope();
+            _kernel.Bind<Model>()
+                   .To<Model>();
+            _kernel.Bind<ILocalizationPersister>()
+                   .To<JsonLocalizationPersister>()
+                   .InSingletonScope();
+            _kernel.Bind<ILocalizationLoader>()
+                   .To<JsonLocalizationLoader>()
+                   .InSingletonScope();
+
+            
+            //Command infrastructure
+            _kernel.Bind<ICommandInvoker>()
+                   .To<CommandInvoker>();
+            _kernel.Bind<ICommandHandler>()
+                   .To<LocalizationHandler>();
+        }
+
+        protected override object GetInstance(Type service,
+                                              string key) {
+            if (service != null)
+                return _kernel.Get(service);
+
+            throw new ArgumentNullException("service");
+        }
+
+        protected override IEnumerable<object> GetAllInstances(Type service) {
+            return _kernel.GetAll(service);
+        }
+
+        protected override void BuildUp(object instance) {
+            _kernel.Inject(instance);
+        }
+
+        protected override IEnumerable<Assembly> SelectAssemblies() {
+            return new[] {
+                             Assembly.GetExecutingAssembly(),
+                             typeof (Model).Assembly
+                         };
+        }
+
+        protected override void OnStartup(object sender,
+                                          System.Windows.StartupEventArgs e) {
+            DisplayRootViewFor<IShell>();
+        }
+    }
+}
