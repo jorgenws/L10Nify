@@ -1,0 +1,56 @@
+<Window x:Class="L10Nify.ShellView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:cal="http://www.caliburnproject.org">
+    <Window.InputBindings>
+        <KeyBinding Key="Z" Modifiers="Control" Command="{Binding UndoCommand}"/>
+        <KeyBinding Key="Y" Modifiers="Control" Command="{Binding RedoCommand}" />
+    </Window.InputBindings>
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Menu IsMainMenu="True">
+            <MenuItem Header="Edit">
+                <MenuItem Header="Undo" Command="{Binding UndoCommand}" InputGestureText="Ctrl+Z" /> <!--cal:Message.Attach="Undo()"-->
+                <MenuItem Header="Redo" Command="{Binding RedoCommand}" InputGestureText="Ctrl+Y" /> <!--cal:Message.Attach="Redo()"-->
+            </MenuItem>
+        </Menu>
+
+        <Grid Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Button Content="Add language">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <cal:ActionMessage MethodName="AddLanguage" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+
+                <!--<Button Content="Add area">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <cal:ActionMessage MethodName="AddArea" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>-->
+            </Grid>
+            <ListBox Grid.Row="1" 
+                 ItemsSource="{Binding Languages}" 
+                 HorizontalContentAlignment="Stretch" 
+                 VerticalContentAlignment="Stretch">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+    </Grid>
+</Window>

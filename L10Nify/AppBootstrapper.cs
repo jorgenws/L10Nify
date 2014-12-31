@@ -30,7 +30,7 @@ namespace L10Nify {
                    .To<AreaFactory>()
                    .InSingletonScope();
             _kernel.Bind<ILocalizationKeyFactory>()
-                   .To<ILocalizationKeyFactory>()
+                   .To<LocalizationKeyFactory>()
                    .InSingletonScope();
             _kernel.Bind<ILocalizedTextFactory>()
                    .To<LocalizedTextFactory>()
@@ -41,19 +41,27 @@ namespace L10Nify {
             _kernel.Bind<IHistoryEntryFactory>()
                    .To<HistoryEntryFactory>()
                    .InSingletonScope();
+            _kernel.Bind<ILocalizationBuilder>()
+                   .To<LocalizationBuilder>()
+                   .InSingletonScope();
             _kernel.Bind<IDifferenceFinder>()
                    .To<DifferenceFinder>()
                    .InSingletonScope();
             _kernel.Bind<Model>()
-                   .To<Model>();
+                   .To<Model>()
+                   .InSingletonScope();
+            _kernel.Bind<IQueryModel>()
+                   .ToMethod((ctx) => ctx.Kernel.Get<Model>());
             _kernel.Bind<ILocalizationPersister>()
                    .To<JsonLocalizationPersister>()
                    .InSingletonScope();
             _kernel.Bind<ILocalizationLoader>()
                    .To<JsonLocalizationLoader>()
                    .InSingletonScope();
+            _kernel.Bind<IGuidGenerator>()
+                   .To<GuidGenerator>()
+                   .InSingletonScope();
 
-            
             //Command infrastructure
             _kernel.Bind<ICommandInvoker>()
                    .To<CommandInvoker>();

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace Core {
-    public class Model {
+    public class Model : IQueryModel {
         private ILoadedLocalization _loadedLocalization;
         private ILocalization _localization;
 
@@ -170,5 +170,17 @@ namespace Core {
                                                          new List<HistoryEntry>());
             _localization = _localizationBuilder.Build(_loadedLocalization);
         }
+    }
+
+    public interface IQueryModel {
+        IEnumerable<Area> RetriveAreas();
+        Area RetriveArea(Guid areaId);
+        IEnumerable<LocalizationKey> RetriveLocalizationKeys();
+        LocalizationKey RetriveLocalizationKey(Guid localizationKeyId);
+        IEnumerable<LocalizedText> RetriveLocalizedTexts();
+        LocalizedText RetriveLocalizedText(Guid localizedTextId);
+        IEnumerable<Language> RetriveLanguages();
+        Language RetriveLanguage(Guid languageId);
+        IEnumerable<HistoryEntry> RetriveHistoryEntries();
     }
 }

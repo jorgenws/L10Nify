@@ -61,6 +61,8 @@ namespace Core {
 
     public interface ICommandInvoker {
         void Invoke(BaseCommand command);
+        void Undo();
+        void Do();
     }
 
     public class DoUndoTuple {
