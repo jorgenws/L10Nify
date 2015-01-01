@@ -2,6 +2,7 @@
 using System.Globalization;
 using Caliburn.Micro;
 
+
 namespace L10Nify {
     public class AddLanguageViewModel : Screen {
         public string LanguageDisplayName {
@@ -33,11 +34,11 @@ namespace L10Nify {
         public void Ok() {
             if (SelectedLocale == null) return;
 
-            TryClose();
+            TryClose(true);
         }
 
         public void Cancel() {
-            TryClose();
+            TryClose(false);
         }
     }
 }

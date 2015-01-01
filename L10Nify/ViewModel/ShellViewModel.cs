@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
@@ -18,6 +17,14 @@ namespace L10Nify {
                                   .ToList();
             }
         }
+
+        public IEnumerable<string> Areas {
+            get {
+                return _queryModel.RetriveAreas()
+                                  .Select(c => c.Name)
+                                  .ToList();
+            }
+        } 
 
         private readonly IQueryModel _queryModel;
         private readonly ICommandInvoker _commandInvoker;
@@ -39,10 +46,21 @@ namespace L10Nify {
 
         public void AddLanguage() {
             var vm = new AddLanguageViewModel();
-            _windowManager.ShowDialog(vm);
-            _commandInvoker.Invoke(new AddLanguageCommand(_guidGenerator.Next(),
-                                                          vm.IsoName,
-                                                          vm.LanguageDisplayName));
+            var result = _windowManager.ShowDialog(vm);
+            if (result.HasValue && result.Value)
+                _commandInvoker.Invoke(new AddLanguageCommand(_guidGenerator.Next(),
+                                                              vm.IsoName,
+                                                              vm.LanguageDisplayName));
+            RefreshView();
+        }
+
+        public void AddArea() {
+            var vm = new AddAreaViewModel();
+            var result = _windowManager.ShowDialog(vm);
+            if (result.HasValue && result.Value)
+                _commandInvoker.Invoke(new AddAreaCommand(_guidGenerator.Next(),
+                                                          vm.AreaName));
+
             RefreshView();
         }
 
@@ -58,32 +76,7 @@ namespace L10Nify {
 
         private void RefreshView() {
             NotifyOfPropertyChange(() => Languages);
+            NotifyOfPropertyChange(() => Areas);
         }
-    }
-
-    public class RelayCommand : ICommand {
-        private readonly System.Action _execute;
-        private readonly Func<bool> _canExecute;
-
-        public RelayCommand(System.Action execute) : this(execute,
-                                                          () => true) {
-            _execute = execute;
-        }
-
-        public RelayCommand(System.Action execute,
-                            Func<bool> canExecute) {
-            _execute = execute;
-            _canExecute = canExecute;
-        }
-
-        public bool CanExecute(object parameter) {
-            return _canExecute.Invoke();
-        }
-
-        public void Execute(object parameter) {
-            _execute.Invoke();
-        }
-
-        public event EventHandler CanExecuteChanged;
     }
 }
