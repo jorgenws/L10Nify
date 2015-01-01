@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
@@ -24,7 +25,15 @@ namespace L10Nify {
                                   .Select(c => c.Name)
                                   .ToList();
             }
-        } 
+        }
+
+        public IEnumerable<string> Keys {
+            get {
+                return _queryModel.RetriveLocalizationKeys()
+                                  .Select(c => c.Key)
+                                  .ToList();
+            }
+        }
 
         private readonly IQueryModel _queryModel;
         private readonly ICommandInvoker _commandInvoker;
@@ -45,23 +54,34 @@ namespace L10Nify {
         }
 
         public void AddLanguage() {
-            var vm = new AddLanguageViewModel();
-            var result = _windowManager.ShowDialog(vm);
-            if (result.HasValue && result.Value)
-                _commandInvoker.Invoke(new AddLanguageCommand(_guidGenerator.Next(),
-                                                              vm.IsoName,
-                                                              vm.LanguageDisplayName));
-            RefreshView();
+            OpenDataView<AddLanguageViewModel>((vm) => new AddLanguageCommand(_guidGenerator.Next(),
+                                                                             vm.IsoName,
+                                                                             vm.LanguageDisplayName));
         }
 
         public void AddArea() {
-            var vm = new AddAreaViewModel();
-            var result = _windowManager.ShowDialog(vm);
-            if (result.HasValue && result.Value)
-                _commandInvoker.Invoke(new AddAreaCommand(_guidGenerator.Next(),
-                                                          vm.AreaName));
+            OpenDataView<AddAreaViewModel>(vm => new AddAreaCommand(_guidGenerator.Next(),
+                                                                   vm.AreaName));
+        }
 
-            RefreshView();
+        public void AddLocalizationKey() {
+            var vm = new AddLocalizationKeyViewModel(_queryModel);
+            var result = _windowManager.ShowDialog(vm);
+            if (result.HasValue && result.Value) {
+                _commandInvoker.Invoke(new AddLocalizationKeyCommand(vm.AreaId,
+                                                                     _guidGenerator.Next(),
+                                                                     vm.KeyName));
+                RefreshView();
+            }
+        }
+
+        private void OpenDataView<T>(Func<T, BaseCommand> createCommand) where T : Screen, new() {
+            var vm = new T();
+            var result = _windowManager.ShowDialog(vm);
+            if (result.HasValue && result.Value) {
+                _commandInvoker.Invoke(createCommand(vm));
+                RefreshView();
+            }
         }
 
         public void Undo() {
@@ -77,6 +97,7 @@ namespace L10Nify {
         private void RefreshView() {
             NotifyOfPropertyChange(() => Languages);
             NotifyOfPropertyChange(() => Areas);
+            NotifyOfPropertyChange(() => Keys);
         }
     }
 }
