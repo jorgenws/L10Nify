@@ -92,7 +92,7 @@ namespace Core {
             if (!_keys.ContainsKey(text.KeyId))
                 throw new Exception("Cannot find key");
 
-            if (_texts.ContainsKey(text.Id) || _texts.Values.Any(c => c.LanguageId == text.LanguageId))
+            if (_texts.ContainsKey(text.Id) || _texts.Values.Any(c => c.LanguageId == text.LanguageId && c.KeyId == text.KeyId))
                 throw new Exception("Cannot add the same language twice");
 
             _texts.Add(text.Id,

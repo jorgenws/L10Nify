@@ -15,10 +15,12 @@ namespace CoreTests {
         private readonly Guid _keyId = Guid.Parse("{AF469E82-2000-446F-8F13-9D02D594D883}");
         private const string ItemKey = "Key";
 
+        private readonly Guid _keyId2 = Guid.Parse("{61C482A9-6E0F-4431-B9FD-CEFAA01B0957}");
+        private const string ItemKey2 = "Key2";
+
         private readonly Guid _textId = Guid.Parse("{D5EEDD4C-D52E-4F02-B4A0-D4E00FBBE3AD}");
         private const string Text = "Text";
 
-        
         [Test]
         public void AddLanguage_LanguageIsOk_IsAdded() {
             var language = CreateDefaultLanguage();
@@ -98,7 +100,7 @@ namespace CoreTests {
         }
 
         [Test]
-        public void AddLocalizedItem_NoMatchingArea_ThrowsException() {
+        public void AddLocalizationKey_NoMatchingArea_ThrowsException() {
             var localizationKey = CreateDefaultLocalizationKey();
             var localization = CreateLocalization();
 
@@ -106,13 +108,14 @@ namespace CoreTests {
         }
 
         [Test]
-        public void AddLocalizedItem_HasArea_IsAdded() {
+        public void AddLocalizationKey_HasArea_IsAdded() {
             var area = CreateDefaultArea();
             var localizationKey = CreateDefaultLocalizationKey();
 
             var localization = CreateLocalization();
             localization.AddArea(area);
             localization.AddLocalizationKey(localizationKey);
+            
             CollectionAssert.Contains(localization.RetriveKeys(), localizationKey);
         }
 
@@ -166,6 +169,40 @@ namespace CoreTests {
 
             CollectionAssert.Contains(localization.RetriveTexts(),
                                       text);
+        }
+
+        [Test]
+        public void AddLocalizedText_AddTwoTextsWithDifferentkeysAndTheSameLanguage_BothAreAdded() {
+            var area = CreateDefaultArea();
+            var localizationKey = CreateDefaultLocalizationKey();
+            var text = CreateDefaultLocalizedText();
+            
+            var localizationKey2 = new LocalizationKey {
+                                                           AreaId = _areaId,
+                                                           Id = _keyId2,
+                                                           Key = ItemKey2
+                                                       };
+            
+            Guid textId2 = Guid.Parse("{7F1FE684-D0C9-4486-811F-6357AE40B42C}");
+            var text2 = new LocalizedText {
+                                              Id = textId2,
+                                              KeyId = _keyId2,
+                                              LanguageId = _languageId,
+                                              Text = "Something"
+                                          };
+
+            var localization = CreateLocalization();
+            localization.AddArea(area);
+            localization.AddLocalizationKey(localizationKey);
+            localization.AddLocalizationKey(localizationKey2);
+
+            localization.AddLocalizedText(area.Id, text);
+            localization.AddLocalizedText(area.Id, text2);
+
+            CollectionAssert.Contains(localization.RetriveTexts(),
+                                      text);
+            CollectionAssert.Contains(localization.RetriveTexts(),
+                                      text2);
         }
 
         [Test]

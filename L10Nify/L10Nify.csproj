@@ -71,10 +71,14 @@
     <Compile Include="ViewModel\AddAreaViewModel.cs" />
     <Compile Include="ViewModel\AddLanguageViewModel.cs" />
     <Compile Include="ViewModel\AddLocalizationKeyViewModel.cs" />
+    <Compile Include="ViewModel\AddLocalizedTextViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\ShellViewModel.cs" />
     <Compile Include="View\AddLocalizationKeyView.xaml.cs">
       <DependentUpon>AddLocalizationKeyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AddLocalizedTextView.xaml.cs">
+      <DependentUpon>AddLocalizedTextView.xaml</DependentUpon>
     </Compile>
     <Page Include="View\AddAreaView.xaml">
       <SubType>Designer</SubType>
@@ -95,6 +99,10 @@
       <DependentUpon>AddLanguageView.xaml</DependentUpon>
     </Compile>
     <Page Include="View\AddLocalizationKeyView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AddLocalizedTextView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
