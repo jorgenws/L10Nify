@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 
@@ -8,6 +9,7 @@ namespace Core {
                           ILocalization localization) {
             var persitance = new LocalizationPersistance {
                                                              Areas = localization.RetriveAreas()
+                                                                                 .Select(CreatePersitance)
                                                                                  .ToArray(),
                                                              Keys = localization.RetriveKeys()
                                                                                 .ToArray(),
@@ -29,6 +31,15 @@ namespace Core {
                     }
                 }
             }       
+        }
+
+        private AreaPersitance CreatePersitance(Area area) {
+            return new AreaPersitance {
+                                          Id = area.Id,
+                                          Name = area.Name,
+                                          Comment = area.Comment,
+                                          ImageAsBase64String = area.Image != null ? Convert.ToBase64String(area.Image) : null
+                                      };
         }
     }
 

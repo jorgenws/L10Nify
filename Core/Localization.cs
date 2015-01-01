@@ -222,6 +222,8 @@ namespace Core {
     public class Area {
         public Guid Id { get; set; }
         public string Name { get; set; }
+        public string Comment { get; set; }
+        public byte[] Image { get; set; }
     }
 
     public class LocalizationKey {
