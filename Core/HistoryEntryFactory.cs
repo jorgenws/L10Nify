@@ -10,13 +10,11 @@ namespace Core {
 
         public HistoryEntry Create(ILocalization localization,
                                    ILoadedLocalization previousLocalization) {
-            //ToDo: Use difference finder to generate text description of what has changed.
-
-            //_differenceFinder.
-
+            var changes = _differenceFinder.Changes(previousLocalization,
+                                                    localization);
 
             return new HistoryEntry(DateTime.Now,
-                                    "");
+                                    changes);
         }
     }
 

@@ -81,6 +81,10 @@ namespace Core {
             _model.Save();
         }
 
+        private void Handle(SaveAsCommand command) {
+            _model.SaveAs(command.FilePath);
+        }
+
         private void Handle(NewCommand command) {
             _model.New();
         }
@@ -95,7 +99,7 @@ namespace Core {
         }
 
         public BaseCommand BuildUndoCommand(BaseCommand command) {
-            return BuildUndoCommand((dynamic) command);
+            return command.CanUndo() ? BuildUndoCommand((dynamic) command) : null;
         }
 
         private BaseCommand BuildUndoCommand(AddLanguageCommand command) {
@@ -222,10 +226,6 @@ namespace Core {
             return new CommandSequence(sequence);
         }
 
-        private BaseCommand BuildUndoCommand(SaveCommand command) {
-            return new NoOpCommand();
-        }
-
         private BaseCommand BuildUndoCommand(CommandSequence commands) {
             var undoCommands = commands.Sequence.Select(command => BuildUndoCommand((dynamic) command))
                                        .Cast<BaseCommand>()
@@ -243,6 +243,10 @@ namespace Core {
     public abstract class BaseCommand {
         public virtual bool ClearStack() {
             return false;
+        }
+
+        public virtual bool CanUndo() {
+            return true;
         }
     }
 
@@ -392,14 +396,34 @@ namespace Core {
         }
     }
 
-    public class SaveCommand : BaseCommand {}
+    public class SaveCommand : BaseCommand {
+        public override bool CanUndo() {
+            return false;
+        }
+    }
     
     public class NewCommand : BaseCommand {
         public override bool ClearStack() {
             return true;
         }
+
+        public override bool CanUndo() {
+            return false;
+        }
     }
-    
+
+    public class SaveAsCommand : BaseCommand {
+        public string FilePath { get; private set; }
+
+        public SaveAsCommand(string filePath) {
+            FilePath = filePath;
+        }
+
+        public override bool CanUndo() {
+            return false;
+        }
+    }
+
     public class LoadCommand : BaseCommand {
         public string FilePath { get; private set; }
 
@@ -410,7 +434,9 @@ namespace Core {
         public override bool ClearStack() {
             return true;
         }
-    }
 
-    public class NoOpCommand : BaseCommand {}
+        public override bool CanUndo() {
+            return false;
+        }
+    }
 }

@@ -89,6 +89,21 @@ namespace CoreTests {
                             Times.Never());            
         }
 
+        [Test]
+        public void Do_CommandWithoutAUndoCommand_WillNotRunUndoCommand() {
+            var command = CreateCommandWithoutUndoCommand();
+
+            _handler.Setup(c => c.BuildUndoCommand(command))
+                    .Returns(() => null);
+
+            var invoker = CreateaDefaultCommandInvoker();
+            invoker.Invoke(command);
+            invoker.Undo();
+
+            _handler.Verify(c => c.Handle(command),
+                            Times.Once);
+        }
+
         private CommandInvoker CreateaDefaultCommandInvoker() {
             return new CommandInvoker(_handler.Object);
         }
@@ -100,6 +115,10 @@ namespace CoreTests {
         private TestCommandThatClearsTheStack CreateDefaultCommandThatClearsTheStack() {
             return new TestCommandThatClearsTheStack();
         }
+
+        private TestCommandWithoutUndoCommand CreateCommandWithoutUndoCommand() {
+            return new TestCommandWithoutUndoCommand();
+        }
     }
 
     public class TestCommand : BaseCommand { }
@@ -107,6 +126,12 @@ namespace CoreTests {
     public class TestCommandThatClearsTheStack : BaseCommand {
         public override bool ClearStack() {
             return true;
+        }
+    }
+
+    public class TestCommandWithoutUndoCommand : BaseCommand {
+        public override bool CanUndo() {
+            return false;
         }
     }
 }

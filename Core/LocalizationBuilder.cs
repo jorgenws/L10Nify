@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Core {
     public class LocalizationBuilder : ILocalizationBuilder {
@@ -38,6 +39,29 @@ namespace Core {
             return localization;
         }
 
+        public ILoadedLocalization Build(ILocalization localization, string filePath) {
+            if (localization == null)
+                throw new Exception("Cannot build from a null object");
+
+            var loadedLocalization = new LoadedLocalization(filePath,
+                                                            localization.RetriveAreas()
+                                                                        .Select(CopyArea)
+                                                                        .ToList(),
+                                                            localization.RetriveKeys()
+                                                                        .Select(CopyKey)
+                                                                        .ToList(),
+                                                            localization.RetriveTexts()
+                                                                        .Select(CopyText)
+                                                                        .ToList(),
+                                                            localization.RetriveLanguages()
+                                                                        .Select(CopyLanguage)
+                                                                        .ToList(),
+                                                            localization.RetriveHistory()
+                                                                        .Select(CopyHistoryEntry)
+                                                                        .ToList());
+            return loadedLocalization;
+        }
+
         private LocalizedText CopyText(LocalizedText text) {
             return new LocalizedText {
                                          Id = text.Id,
@@ -58,7 +82,9 @@ namespace Core {
         private Area CopyArea(Area area) {
             return new Area {
                                 Id = area.Id,
-                                Name = area.Name
+                                Name = area.Name,
+                                Comment = area.Comment,
+                                Image = area.Image
                             };
         }
 
@@ -78,5 +104,6 @@ namespace Core {
 
     public interface ILocalizationBuilder {
         ILocalization Build(ILoadedLocalization loadedLocalization);
+        ILoadedLocalization Build(ILocalization localization, string filePath);
     }
 }

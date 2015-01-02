@@ -20,17 +20,20 @@ namespace Core {
 
             try {
                 var tuple = _doStack.Pop();
+                _commandHandler.Handle(tuple.Do);
+                
                 //command will have to clear the stack because the 
                 //context has changed (for example a new file or a loaded one).
                 if (tuple.Do.ClearStack()) {
                     _undoStack.Clear();
-                    _doStack.Clear();
-                    _commandHandler.Handle(tuple.Do);
+                    _doStack.Clear();                    
                 }
-                else {
-                    _commandHandler.Handle(tuple.Do);
+                
+                //Some operations can not be undone (for example saving).
+                //Do not push it to undo stack
+                if (tuple.Undo != null)
                     _undoStack.Push(tuple);
-                }
+
             }
             catch (Exception e) {
                 throw;

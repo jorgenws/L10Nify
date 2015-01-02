@@ -50,7 +50,7 @@ namespace Core {
                                    Area y) {
             if (x == y)
                 throw new NotSupportedException("This method compares objects by value");
-            return x.Id == y.Id && x.Name == y.Name;
+            return x.Id == y.Id && x.Name == y.Name && x.Comment == y.Comment && x.Image == y.Image;
         }
 
         private bool AreKeysEqual(LocalizationKey x,

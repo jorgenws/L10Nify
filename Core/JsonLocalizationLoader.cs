@@ -29,7 +29,7 @@ namespace Core {
                                 Id = areaPersitance.Id,
                                 Name = areaPersitance.Name,
                                 Comment = areaPersitance.Comment,
-                                Image = Convert.FromBase64String(areaPersitance.ImageAsBase64String)
+                                Image = string.IsNullOrWhiteSpace(areaPersitance.ImageAsBase64String) ? null : Convert.FromBase64String(areaPersitance.ImageAsBase64String)
                             };
         }
     }

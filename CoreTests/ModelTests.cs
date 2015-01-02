@@ -225,6 +225,15 @@ namespace CoreTests {
             _localization.Verify(c => c.RemoveLocalizedText(_textId));
         }
 
+        [Test]
+        public void HasFileName_NotLoadedLocalization_IsFalse() {
+            var model = CreateDefaultModel();
+            
+            var result = model.HasFileName();
+
+            Assert.IsFalse(result);
+        }
+
         private Model CreateDefaultModel() {
             return new Model(_languageFactory.Object,
                              _historyEntryFactory.Object,

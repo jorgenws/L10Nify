@@ -22,7 +22,7 @@ namespace Core {
                                                                                           .ToArray()
                                                          };
 
-            using (var fs = File.Open(filePath, FileMode.CreateNew)) {
+            using (var fs = File.Open(filePath, FileMode.Create)) {
                 using (var sw = new StreamWriter(fs)) {
                     using (var jw = new JsonTextWriter(sw)) {
                         var serializer = new JsonSerializer();

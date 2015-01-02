@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Core {
     public class Model : IQueryModel {
@@ -150,15 +151,41 @@ namespace Core {
             return _localization.RetriveHistory();
         }
 
+        public bool HasFileName() {
+            if (_loadedLocalization == null) return false;
+            if (string.IsNullOrWhiteSpace(_loadedLocalization.FilePath)) return false;
+
+            return true;
+        }
+
         public void Save() {
             var historyEntry = _historyEntryFactory.Create(_localization,
                                                            _loadedLocalization);
             _localization.AddHistoryEntry(historyEntry);
 
-            _localizationPersister.Write(_loadedLocalization.FileName,
+            _localizationPersister.Write(_loadedLocalization.FilePath,
                                          _localization);
+
+            MoveCurrentToLoadedWhenSaving(_loadedLocalization.FilePath);
         }
 
+        public void SaveAs(string filePath) {
+            var historyEntry = _historyEntryFactory.Create(_localization,
+                                                           _loadedLocalization);
+
+            _localization.AddHistoryEntry(historyEntry);
+
+            _localizationPersister.Write(filePath,
+                                         _localization);
+
+            MoveCurrentToLoadedWhenSaving(filePath);
+        }
+
+        private void MoveCurrentToLoadedWhenSaving(string filePath) {
+            _loadedLocalization = _localizationBuilder.Build(_localization,
+                                                             filePath);
+        }
+        
         public void Load(string filePath) {
             _loadedLocalization = _localizationLoader.Load(filePath);
             _localization = _localizationBuilder.Build(_loadedLocalization);
@@ -185,5 +212,7 @@ namespace Core {
         IEnumerable<Language> RetriveLanguages();
         Language RetriveLanguage(Guid languageId);
         IEnumerable<HistoryEntry> RetriveHistoryEntries();
+
+        bool HasFileName();
     }
 }

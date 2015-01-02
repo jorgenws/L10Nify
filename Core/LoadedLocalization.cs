@@ -2,20 +2,20 @@
 
 namespace Core {
     public class LoadedLocalization : ILoadedLocalization {
-        public string FileName { get; private set; }
+        public string FilePath { get; private set; }
         public List<Area> Areas { get; private set; }
         public List<LocalizationKey> Keys { get; private set; }
         public List<LocalizedText> Texts { get; private set; }
         public List<Language> Languages { get; private set; }
         public List<HistoryEntry> HistoryEntries { get; private set; }
 
-        public LoadedLocalization(string fileName,
+        public LoadedLocalization(string filePath,
                                   List<Area> areas,
                                   List<LocalizationKey> keys,
                                   List<LocalizedText> texts,
                                   List<Language> languages,
                                   List<HistoryEntry> historyEntries) {
-            FileName = fileName;
+            FilePath = filePath;
             Languages = languages;
             HistoryEntries = historyEntries;
             Areas = areas;
@@ -25,7 +25,7 @@ namespace Core {
     }
 
     public interface ILoadedLocalization {
-        string FileName { get; }
+        string FilePath { get; }
         List<Area> Areas { get; }
         List<LocalizationKey> Keys { get; }
         List<LocalizedText> Texts { get; }

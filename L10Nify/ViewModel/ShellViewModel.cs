@@ -1,19 +1,24 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Caliburn.Micro;
 using Core;
+using Screen = Caliburn.Micro.Screen;
 
 namespace L10Nify {
     public class ShellViewModel : PropertyChangedBase,
                                   IShell {
         public ICommand UndoCommand { get; private set; }
         public ICommand RedoCommand { get; private set; }
+
+        public ICommand NewCommand { get; private set; }
+        public ICommand OpenCommand { get; private set; }
+        public ICommand SaveCommand { get; private set; }
+        public ICommand SaveAsCommand { get; private set; }
 
         public IEnumerable<string> Languages {
             get {
@@ -67,6 +72,11 @@ namespace L10Nify {
 
             UndoCommand = new RelayCommand(Undo);
             RedoCommand = new RelayCommand(Redo);
+            NewCommand = new RelayCommand(New);
+            OpenCommand = new RelayCommand(Open);
+            SaveCommand = new RelayCommand(Save,
+                                           () => _queryModel.HasFileName());
+            SaveAsCommand = new RelayCommand(SaveAs);
         }
 
         public void AddLanguage() {
@@ -122,6 +132,31 @@ namespace L10Nify {
             RefreshView();
         }
 
+        public void New() {
+            _commandInvoker.Invoke(new NewCommand());
+            RefreshView();
+        }
+
+        public void Open() {
+            var ofd = new OpenFileDialog();
+            if (ofd.ShowDialog() == DialogResult.OK) {
+                _commandInvoker.Invoke(new LoadCommand(ofd.FileName));
+                RefreshView();
+            }
+        }
+
+        public void Save() {
+            _commandInvoker.Invoke(new SaveCommand());
+        }
+
+        public void SaveAs() {
+            var sfd = new SaveFileDialog();
+            if (sfd.ShowDialog() == DialogResult.OK) {
+                _commandInvoker.Invoke(new SaveAsCommand(sfd.FileName));
+                RefreshView();
+            }
+        }
+
         private void RefreshView() {
             NotifyOfPropertyChange(() => Languages);
             NotifyOfPropertyChange(() => Areas);
@@ -139,9 +174,6 @@ namespace L10Nify {
             get {
                 if (_image == null &&
                     _area.Image != null) {
-                    //var converter = new ImageConverter();
-                    //_image = (Image) converter.ConvertFrom(_area.Image);
-
                     _image = new BitmapImage();
                     _image.BeginInit();
                     _image.StreamSource = new MemoryStream(_area.Image);
