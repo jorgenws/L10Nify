@@ -226,23 +226,34 @@ namespace CoreTests {
         [Test]
         public void ChangeAreaName_AreaDoesNotExist_ThrowsException() {
             var localization = CreateLocalization();
-            Assert.Throws<Exception>(() => localization.ChangeAreaName(_areaId,
-                                                                       "test"));
+            Assert.Throws<Exception>(() => localization.SetArea(_areaId,
+                                                                "test",
+                                                                null,
+                                                                null));
         }
 
         [Test]
         public void ChangeAreaName_AreExists_AreaNameIsChanged() {
             const string newAreaName = "area51";
+            const string newAreaComment = "comment";
+            byte[] newAreaImage = new byte[0];
+
             var area = CreateDefaultArea();
 
             var localization = CreateLocalization();
             localization.AddArea(area);
 
-            localization.ChangeAreaName(area.Id,
-                                        newAreaName);
+            localization.SetArea(area.Id,
+                                 newAreaName,
+                                 newAreaComment,
+                                 newAreaImage);
 
             Assert.AreEqual(newAreaName,
                             area.Name);
+            Assert.AreEqual(newAreaComment,
+                            area.Comment);
+            Assert.AreEqual(newAreaImage,
+                            area.Image);
         }
 
         [Test]

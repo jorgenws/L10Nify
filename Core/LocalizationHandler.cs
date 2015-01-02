@@ -68,9 +68,11 @@ namespace Core {
                            command.Image);
         }
 
-        private void Handle(ChangeAreaNameCommand command) {
-            _model.ChangeAreaName(command.AreaId,
-                                  command.NewAreaName);
+        private void Handle(SetAreaCommand command) {
+            _model.SetArea(command.AreaId,
+                           command.NewName,
+                           command.NewComment,
+                           command.NewImage);
         }
 
         private void Handle(RemoveAreaCommand command) {
@@ -190,10 +192,12 @@ namespace Core {
             return new RemoveAreaCommand(command.AreaId);
         }
 
-        private BaseCommand BuildUndoCommand(ChangeAreaNameCommand command) {
+        private BaseCommand BuildUndoCommand(SetAreaCommand command) {
             var area =_model.RetriveArea(command.AreaId);
-            return new ChangeAreaNameCommand(area.Id,
-                                             area.Name);
+            return new SetAreaCommand(area.Id,
+                                      area.Name,
+                                      area.Comment,
+                                      area.Image);
         }
 
         private BaseCommand BuildUndoCommand(RemoveAreaCommand command) {
@@ -377,14 +381,20 @@ namespace Core {
         }
     }
 
-    public class ChangeAreaNameCommand : BaseCommand {
+    public class SetAreaCommand : BaseCommand {
         public Guid AreaId { get; private set; }
-        public string NewAreaName { get; private set; }
+        public string NewName { get; private set; }
+        public string NewComment { get; private set; }
+        public byte[] NewImage { get; private set; }
 
-        public ChangeAreaNameCommand(Guid areaId,
-                                     string newAreaName) {
+        public SetAreaCommand(Guid areaId,
+                              string newName,
+                              string newComment,
+                              byte[] newImage) {
             AreaId = areaId;
-            NewAreaName = newAreaName;
+            NewName = newName;
+            NewComment = newComment;
+            NewImage = newImage;
         }
     }
 

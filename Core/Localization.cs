@@ -27,12 +27,16 @@ namespace Core {
                       area);
         }
 
-        public void ChangeAreaName(Guid areaId,
-                                   string newAreaName) {
+        public void SetArea(Guid areaId,
+                            string newName,
+                            string newComment,
+                            byte[] newImage) {
             if (!_area.ContainsKey(areaId))
                 throw new Exception("Area does not exist");
 
-            _area[areaId].Name = newAreaName;
+            _area[areaId].Name = newName;
+            _area[areaId].Comment = newComment;
+            _area[areaId].Image = newImage;
         }
 
         public void RemoveArea(Guid areaId) {
@@ -191,8 +195,10 @@ namespace Core {
 
     public interface ILocalization {
         void AddArea(Area area);
-        void ChangeAreaName(Guid areaId,
-                            string newAreaName);
+        void SetArea(Guid areaId,
+                     string newName,
+                     string newComment,
+                     byte[] newImage);
         void RemoveArea(Guid areaId);
         void AddLocalizationKey(LocalizationKey key);
         void ChangeKeyName(Guid keyId,

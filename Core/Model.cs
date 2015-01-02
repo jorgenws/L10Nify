@@ -44,10 +44,14 @@ namespace Core {
             _localization.AddArea(area);
         }
 
-        public void ChangeAreaName(Guid areaId,
-                                   string newName) {
-            _localization.ChangeAreaName(areaId,
-                                         newName);
+        public void SetArea(Guid areaId,
+                            string newName,
+                            string newComment,
+                            byte[] newImage) {
+            _localization.SetArea(areaId,
+                                  newName,
+                                  newComment,
+                                  newImage);
         }
 
         public void RemoveArea(Guid areaId) {

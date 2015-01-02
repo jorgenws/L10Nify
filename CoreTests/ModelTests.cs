@@ -131,13 +131,19 @@ namespace CoreTests {
         [Test]
         public void ChangeArea_IsOk_ChangedToLocalization() {
             const string areaName = "name";
+            const string areaComment = "comment";
+            byte[] areaImage = new byte[0];
             var model = CreateDefaultModel();
 
-            model.ChangeAreaName(_areaId,
-                                 areaName);
+            model.SetArea(_areaId,
+                          areaName,
+                          areaComment,
+                          areaImage);
 
-            _localization.Verify(c => c.ChangeAreaName(_areaId,
-                                                       areaName));
+            _localization.Verify(c => c.SetArea(_areaId,
+                                                areaName,
+                                                areaComment,
+                                                areaImage));
         }
 
         [Test]
