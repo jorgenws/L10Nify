@@ -63,7 +63,9 @@ namespace Core {
 
         private void Handle(AddAreaCommand command) {
             _model.AddArea(command.AreaId,
-                           command.Name);
+                           command.Name,
+                           command.Comment,
+                           command.Image);
         }
 
         private void Handle(ChangeAreaNameCommand command) {
@@ -196,7 +198,9 @@ namespace Core {
             var area = _model.RetriveArea(command.AreaId);
 
             sequence.Add(new AddAreaCommand(area.Id,
-                                            area.Name));
+                                            area.Name,
+                                            area.Comment,
+                                            area.Image));
 
             var keys = _model.RetriveLocalizationKeys()
                              .Where(c => c.AreaId == command.AreaId)
@@ -355,10 +359,17 @@ namespace Core {
     public class AddAreaCommand : BaseCommand {
         public Guid AreaId { get; private set; }
         public string Name { get; private set; }
+        public string Comment { get; set; }
+        public byte[] Image { get; set; }
 
-        public AddAreaCommand(Guid areaId, string name) {
+        public AddAreaCommand(Guid areaId,
+                              string name,
+                              string comment,
+                              byte[] image) {
             AreaId = areaId;
             Name = name;
+            Comment = comment;
+            Image = image;
         }
     }
 
@@ -366,7 +377,8 @@ namespace Core {
         public Guid AreaId { get; private set; }
         public string NewAreaName { get; private set; }
 
-        public ChangeAreaNameCommand(Guid areaId, string newAreaName) {
+        public ChangeAreaNameCommand(Guid areaId,
+                                     string newAreaName) {
             AreaId = areaId;
             NewAreaName = newAreaName;
         }

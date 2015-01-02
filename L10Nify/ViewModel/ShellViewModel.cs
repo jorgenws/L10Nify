@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Caliburn.Micro;
 using Core;
 
@@ -19,10 +23,10 @@ namespace L10Nify {
             }
         }
 
-        public IEnumerable<string> Areas {
+        public IEnumerable<AreaViewModel> Areas {
             get {
                 return _queryModel.RetriveAreas()
-                                  .Select(c => c.Name)
+                                  .Select(c => _areaViewModelFactory.Create(c))
                                   .ToList();
             }
         }
@@ -47,15 +51,18 @@ namespace L10Nify {
         private readonly IQueryModel _queryModel;
         private readonly ICommandInvoker _commandInvoker;
         private readonly IGuidGenerator _guidGenerator;
+        private readonly IAreaViewModelFactory _areaViewModelFactory;
         private readonly IWindowManager _windowManager;
 
         public ShellViewModel(IQueryModel queryModel,
                               ICommandInvoker commandInvoker,
                               IGuidGenerator guidGenerator,
+                              IAreaViewModelFactory areaViewModelFactory,
                               IWindowManager windowManager) {
             _queryModel = queryModel;
             _commandInvoker = commandInvoker;
             _guidGenerator = guidGenerator;
+            _areaViewModelFactory = areaViewModelFactory;
             _windowManager = windowManager;
 
             UndoCommand = new RelayCommand(Undo);
@@ -74,7 +81,9 @@ namespace L10Nify {
             var vm = new AddAreaViewModel();
             OpenDataView(vm,
                          c => new AddAreaCommand(_guidGenerator.Next(),
-                                                 c.AreaName));
+                                                 c.AreaName,
+                                                 c.Comment,
+                                                 c.Image));
         }
 
         public void AddLocalizationKey() {
@@ -119,5 +128,47 @@ namespace L10Nify {
             NotifyOfPropertyChange(() => Keys);
             NotifyOfPropertyChange(() => Texts);
         }
+    }
+
+    public class AreaViewModel {
+        public Guid Id { get { return _area.Id; } }
+        public string Name { get { return _area.Name; } }
+        public string Comment { get { return _area.Comment; } }
+
+        public BitmapImage Image {
+            get {
+                if (_image == null &&
+                    _area.Image != null) {
+                    //var converter = new ImageConverter();
+                    //_image = (Image) converter.ConvertFrom(_area.Image);
+
+                    _image = new BitmapImage();
+                    _image.BeginInit();
+                    _image.StreamSource = new MemoryStream(_area.Image);
+                    _image.EndInit();
+                    _image.Freeze();
+                }
+
+                return _image;
+            }
+        }
+
+        private BitmapImage _image;
+
+        private readonly Area _area;
+
+        public AreaViewModel(Area area) {
+            _area = area;
+        }
+    }
+
+    public class AreaViewModelFactory : IAreaViewModelFactory {
+        public AreaViewModel Create(Area area) {
+            return new AreaViewModel(area);
+        }
+    }
+
+    public interface IAreaViewModelFactory {
+        AreaViewModel Create(Area area);
     }
 }

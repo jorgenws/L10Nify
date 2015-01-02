@@ -11,7 +11,9 @@ namespace CoreTests {
         public void Create_AreaIdIsEmpty_ThrowsNotSupportedException() {
             var factory = CreateDefaultAreaFactory();
             Assert.Throws<NotSupportedException>(() => factory.Create(Guid.Empty,
-                                                                      "name"));
+                                                                      "name",
+                                                                      "comment",
+                                                                      null));
         }
 
         [Test]
@@ -19,6 +21,8 @@ namespace CoreTests {
             var factory = CreateDefaultAreaFactory();
 
             var result = factory.Create(_id,
+                                        null,
+                                        "Comment",
                                         null);
 
             Assert.AreEqual(_id,
@@ -33,7 +37,9 @@ namespace CoreTests {
             var factory = CreateDefaultAreaFactory();
 
             var result = factory.Create(_id,
-                                        name);
+                                        name,
+                                        null,
+                                        null);
 
             Assert.AreEqual(_id,
                             result.Id);

@@ -89,7 +89,14 @@
                  VerticalContentAlignment="Stretch">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding}" />
+                            <TextBlock Text="{Binding Path=Name}" >
+                                <TextBlock.ToolTip>
+                                    <StackPanel>
+                                        <Image Source="{Binding Path=Image}" Height="100" />
+                                        <TextBlock Text="{Binding Path=Comment}" />
+                                    </StackPanel>
+                                </TextBlock.ToolTip>
+                            </TextBlock>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>

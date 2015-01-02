@@ -17,13 +17,25 @@
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="50*" />
                 <ColumnDefinition Width="50*" />
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Row="0" Grid.Column="0" Text="Name:" />
-            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding AreaName}" />            
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding AreaName}" />
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Comment:" />
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Comment}" />
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Image:" />
+            <Button Grid.Row="2" Grid.Column="1" Content="Add file">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <cal:ActionMessage MethodName="AddImage" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Button>
         </Grid>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Content="Cancel">

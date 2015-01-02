@@ -3,7 +3,9 @@
 namespace Core {
     public class AreaFactory : IAreaFactory {
         public Area Create(Guid areaId,
-                           string name) {
+                           string name,
+                           string comment,
+                           byte[] image) {
             if (areaId == Guid.Empty)
                 throw new NotSupportedException("Area id  cannot be empty");
 
@@ -14,13 +16,17 @@ namespace Core {
 
             return new Area {
                                 Id = areaId,
-                                Name = name
+                                Name = name,
+                                Comment = comment,
+                                Image = image
                             };
         }
     }
 
     public interface IAreaFactory {
         Area Create(Guid areaId,
-                    string name);
+                    string name,
+                    string comment,
+                    byte[] image);
     }
 }

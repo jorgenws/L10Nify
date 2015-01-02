@@ -113,13 +113,17 @@ namespace CoreTests {
             const string areaName = "name";
             var area = CreateDefaultArea();
             _areaFactory.Setup(c => c.Create(_areaId,
-                                             areaName))
+                                             areaName,
+                                             null,
+                                             null))
                         .Returns(area);
 
             var model = CreateDefaultModel();
 
             model.AddArea(_areaId,
-                          areaName);
+                          areaName,
+                          null,
+                          null);
 
             _localization.Verify(c => c.AddArea(area));
         }

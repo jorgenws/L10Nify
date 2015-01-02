@@ -67,6 +67,11 @@ namespace L10Nify {
                    .To<CommandInvoker>();
             _kernel.Bind<ICommandHandler>()
                    .To<LocalizationHandler>();
+
+            //ViewModels
+            _kernel.Bind<IAreaViewModelFactory>()
+                   .To<AreaViewModelFactory>()
+                   .InSingletonScope();
         }
 
         protected override object GetInstance(Type service,

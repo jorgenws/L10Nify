@@ -35,8 +35,11 @@ namespace Core {
             New();
         }
 
-        public void AddArea(Guid areaId, string name) {
-            var area = _areaFactory.Create(areaId, name);
+        public void AddArea(Guid areaId, string name, string comment, byte[] image) {
+            var area = _areaFactory.Create(areaId,
+                                           name,
+                                           comment,
+                                           image);
             _localization.AddArea(area);
         }
 
