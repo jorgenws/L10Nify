@@ -135,6 +135,7 @@ namespace L10Nify {
         public void New() {
             _commandInvoker.Invoke(new NewCommand());
             RefreshView();
+            CommandManager.InvalidateRequerySuggested();
         }
 
         public void Open() {
@@ -142,6 +143,7 @@ namespace L10Nify {
             if (ofd.ShowDialog() == DialogResult.OK) {
                 _commandInvoker.Invoke(new LoadCommand(ofd.FileName));
                 RefreshView();
+                CommandManager.InvalidateRequerySuggested();
             }
         }
 
@@ -154,6 +156,7 @@ namespace L10Nify {
             if (sfd.ShowDialog() == DialogResult.OK) {
                 _commandInvoker.Invoke(new SaveAsCommand(sfd.FileName));
                 RefreshView();
+                CommandManager.InvalidateRequerySuggested();
             }
         }
 

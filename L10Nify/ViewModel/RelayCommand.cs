@@ -7,7 +7,7 @@ namespace L10Nify {
         private readonly Func<bool> _canExecute;
 
         public RelayCommand(Action execute) : this(execute,
-                                                          () => true) {
+                                                   () => true) {
             _execute = execute;
         }
 
@@ -25,6 +25,9 @@ namespace L10Nify {
             _execute.Invoke();
         }
 
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler CanExecuteChanged {
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
+        }
     }
 }
