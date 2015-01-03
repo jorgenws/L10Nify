@@ -68,7 +68,7 @@ namespace L10NifyTests {
         }
 
         [Test]
-        public void Build_HasOneAreaOneKeyAndOneLanguage_ReturnsTreeWithOneAreaAndOneKeyAndOneLanguage() {
+        public void Build_HasOneAreaOneKeyAndOneLocalizedText_ReturnsTreeWithOneAreaAndOneKeyAndOneLocalizedText() {
             _queryModel.Setup(c => c.RetriveAreas())
                        .Returns(new[] {
                                           CreateDefaultArea()
@@ -76,42 +76,13 @@ namespace L10NifyTests {
             _queryModel.Setup(c => c.RetriveLocalizationKeys())
                        .Returns(new[] {
                                           CreateDefaultLocalizationKey()
-                                      });
-            _queryModel.Setup(c => c.RetriveLanguages())
-                       .Returns(new[] {
-                                          CreateDefaultLanguage()
-                                      });
-
-            var builder = CreateDefaultTreeViewModelBuilder();
-
-            var result = builder.Build(_queryModel.Object);
-
-            var areaVM = result.First() as AreaTreeNodeViewModel;
-            var keyVM = areaVM.Children.First() as LocalizationKeyTreeNodeViewModel;
-            Assert.IsInstanceOf<LanguageTreeNodeViewModel>(keyVM.Children.First());
-            var languageVM = keyVM.Children.First() as LanguageTreeNodeViewModel;
-            Assert.AreEqual(_languageId,
-                            languageVM.Id);
-        }
-
-        [Test]
-        public void Build_HasOneAreaOneKeyOneLanguageAndOneText_ReturnsTreeWithOneAreaAndOneKeyOneLanguageOneText() {
-            _queryModel.Setup(c => c.RetriveAreas())
-           .Returns(new[] {
-                                          CreateDefaultArea()
-                                      });
-            _queryModel.Setup(c => c.RetriveLocalizationKeys())
-                       .Returns(new[] {
-                                          CreateDefaultLocalizationKey()
-                                      });
-            _queryModel.Setup(c => c.RetriveLanguages())
-                       .Returns(new[] {
-                                          CreateDefaultLanguage()
                                       });
             _queryModel.Setup(c => c.RetriveLocalizedTexts())
                        .Returns(new[] {
                                           CreateDefaultLocalizedText()
                                       });
+            _queryModel.Setup(c => c.RetriveLanguage(_languageId))
+                       .Returns(CreateDefaultLanguage());
 
             var builder = CreateDefaultTreeViewModelBuilder();
 
@@ -119,15 +90,14 @@ namespace L10NifyTests {
 
             var areaVM = result.First() as AreaTreeNodeViewModel;
             var keyVM = areaVM.Children.First() as LocalizationKeyTreeNodeViewModel;
-            var languageVM = keyVM.Children.First() as LanguageTreeNodeViewModel;
-            Assert.IsInstanceOf<LocalizedTextTreeNodeViewModel>(languageVM.Children.First());
-            var textVM = languageVM.Children.First() as LocalizedTextTreeNodeViewModel;
+            Assert.IsInstanceOf<LocalizedTextTreeNodeViewModel>(keyVM.Children.First());
+            var localizedTextVM = keyVM.Children.First() as LocalizedTextTreeNodeViewModel;
             Assert.AreEqual(_textId,
-                            textVM.Id);
+                            localizedTextVM.Id);
         }
 
         [Test]
-        public void Build_HasOneAreaOneKeyTwoLanguagesAndOneText_ReturnsTreeWithOneAreaAndOneKeyOneLanguageOneText() {
+        public void Build_HasOneAreaOneKeyTwoLanguagesAndTexts_ReturnsTreeWithOneAreaAndOneKeyTwoLanguagesAndTexts() {
             _queryModel.Setup(c => c.RetriveAreas())
            .Returns(new[] {
                                           CreateDefaultArea()
@@ -140,11 +110,10 @@ namespace L10NifyTests {
             var language = CreateDefaultLanguage();
             var language2 = CreateDefaultLanguage();
             language2.Id = _language2Id;
-            _queryModel.Setup(c => c.RetriveLanguages())
-                       .Returns(new[] {
-                                          language,
-                                          language2
-                                      });
+            _queryModel.Setup(c => c.RetriveLanguage(_languageId))
+                       .Returns(language);
+            _queryModel.Setup(c => c.RetriveLanguage(_language2Id))
+                       .Returns(language2);
 
             var text = CreateDefaultLocalizedText();
             var text2 = CreateDefaultLocalizedText();
@@ -162,14 +131,8 @@ namespace L10NifyTests {
 
             var areaVM = result.First() as AreaTreeNodeViewModel;
             var keyVM = areaVM.Children.First() as LocalizationKeyTreeNodeViewModel;
-
             Assert.AreEqual(2,
                             keyVM.Children.Count());
-
-            var languageVM = keyVM.Children.First() as LanguageTreeNodeViewModel;
-
-            Assert.AreEqual(1,
-                            languageVM.Children.Count());
         }
 
         private TreeViewModelBuilder CreateDefaultTreeViewModelBuilder() {

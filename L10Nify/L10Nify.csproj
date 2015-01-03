@@ -77,7 +77,6 @@
     <Compile Include="ViewModel\AreaViewModel.cs" />
     <Compile Include="ViewModel\Factory\AreaViewModelFactory.cs" />
     <Compile Include="ViewModel\ITreeNodeViewModel.cs" />
-    <Compile Include="ViewModel\LanguageTreeNodeViewModel.cs" />
     <Compile Include="ViewModel\ListOrientedWorkbenchViewModel.cs" />
     <Compile Include="ViewModel\LocalizationKeyTreeNodeViewModel.cs" />
     <Compile Include="ViewModel\LocalizedTextTreeNodeViewModel.cs" />
@@ -94,9 +93,6 @@
     </Compile>
     <Compile Include="View\AreaTreeNodeView.xaml.cs">
       <DependentUpon>AreaTreeNodeView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\LanguageTreeNodeView.xaml.cs">
-      <DependentUpon>LanguageTreeNodeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ListOrientedWorkbenchView.xaml.cs">
       <DependentUpon>ListOrientedWorkbenchView.xaml</DependentUpon>
@@ -137,10 +133,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\AreaTreeNodeView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\LanguageTreeNodeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

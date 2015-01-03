@@ -22,10 +22,20 @@ namespace L10Nify {
             get { return _localizedText.Text; }
         }
 
-        private readonly LocalizedText _localizedText;
+        public string DisplayText { get {
+            return string.Format("{0} ({1})",
+                                 _localizedText.Text,
+                                 _language.DisplayName);
+        } }
 
-        public LocalizedTextTreeNodeViewModel(LocalizedText localizedText) {
+        public string LanguageName { get { return _language.DisplayName; } }
+
+        private readonly LocalizedText _localizedText;
+        private readonly Language _language;
+
+        public LocalizedTextTreeNodeViewModel(LocalizedText localizedText, Language language) {
             _localizedText = localizedText;
+            _language = language;
         }
     }
 }

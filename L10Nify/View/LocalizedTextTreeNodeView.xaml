@@ -6,6 +6,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <TextBlock Text="{Binding LocalizedText}" />
+        <TextBlock Text="{Binding DisplayText}" />
     </Grid>
 </UserControl>
