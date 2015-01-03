@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Core;
 using L10Nify;
-using L10Nify.ViewModel;
 using Moq;
 using NUnit.Framework;
 
@@ -16,7 +15,9 @@ namespace L10NifyTests {
         private readonly Guid _areaId = Guid.Parse("{C7BA6498-9CC2-45B3-86B1-8A19995EC769}");
         private readonly Guid _keyId = Guid.Parse("{885F34AF-11C5-4902-9A20-23435A9A921F}");
         private readonly Guid _languageId = Guid.Parse("{C4E63176-9E9E-445A-86ED-635B942E61A9}");
+        private readonly Guid _language2Id = Guid.Parse("{1534FA40-59EC-499C-9A4F-901B6E902716}");
         private readonly Guid _textId = Guid.Parse("{9C34D957-7A20-410B-A301-8ED406C4E6DC}");
+        private readonly Guid _text2Id = Guid.Parse("{693AA19E-CBF7-49AB-9730-2DD6EFD4588D}");
 
         [SetUp]
         public void SetUp() {
@@ -123,6 +124,52 @@ namespace L10NifyTests {
             var textVM = languageVM.Children.First() as LocalizedTextTreeNodeViewModel;
             Assert.AreEqual(_textId,
                             textVM.Id);
+        }
+
+        [Test]
+        public void Build_HasOneAreaOneKeyTwoLanguagesAndOneText_ReturnsTreeWithOneAreaAndOneKeyOneLanguageOneText() {
+            _queryModel.Setup(c => c.RetriveAreas())
+           .Returns(new[] {
+                                          CreateDefaultArea()
+                                      });
+            _queryModel.Setup(c => c.RetriveLocalizationKeys())
+                       .Returns(new[] {
+                                          CreateDefaultLocalizationKey()
+                                      });
+            
+            var language = CreateDefaultLanguage();
+            var language2 = CreateDefaultLanguage();
+            language2.Id = _language2Id;
+            _queryModel.Setup(c => c.RetriveLanguages())
+                       .Returns(new[] {
+                                          language,
+                                          language2
+                                      });
+
+            var text = CreateDefaultLocalizedText();
+            var text2 = CreateDefaultLocalizedText();
+            text2.Id = _text2Id;
+            text2.LanguageId = _language2Id;
+            _queryModel.Setup(c => c.RetriveLocalizedTexts())
+                       .Returns(new[] {
+                                          text,
+                                          text2
+                                      });
+
+            var builder = CreateDefaultTreeViewModelBuilder();
+
+            var result = builder.Build(_queryModel.Object);
+
+            var areaVM = result.First() as AreaTreeNodeViewModel;
+            var keyVM = areaVM.Children.First() as LocalizationKeyTreeNodeViewModel;
+
+            Assert.AreEqual(2,
+                            keyVM.Children.Count());
+
+            var languageVM = keyVM.Children.First() as LanguageTreeNodeViewModel;
+
+            Assert.AreEqual(1,
+                            languageVM.Children.Count());
         }
 
         private TreeViewModelBuilder CreateDefaultTreeViewModelBuilder() {

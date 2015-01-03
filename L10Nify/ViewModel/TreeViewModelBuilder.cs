@@ -2,7 +2,7 @@
 using System.Linq;
 using Core;
 
-namespace L10Nify.ViewModel {
+namespace L10Nify {
     public class TreeViewModelBuilder : ITreeViewModelBuilder {
         private readonly IAreaViewModelFactory _areaViewModelFactory;
 

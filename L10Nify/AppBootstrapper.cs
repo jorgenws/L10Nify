@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Windows;
 using Caliburn.Micro;
 using Core;
 using Ninject;
@@ -72,6 +73,12 @@ namespace L10Nify {
             _kernel.Bind<IAreaViewModelFactory>()
                    .To<AreaViewModelFactory>()
                    .InSingletonScope();
+            _kernel.Bind<ITreeViewModelBuilder>()
+                   .To<TreeViewModelBuilder>()
+                   .InSingletonScope();
+            _kernel.Bind<IWorkbenchFactory>()
+                   .To<WorkbenchFactory>()
+                   .InSingletonScope();
         }
 
         protected override object GetInstance(Type service,
@@ -98,7 +105,7 @@ namespace L10Nify {
         }
 
         protected override void OnStartup(object sender,
-                                          System.Windows.StartupEventArgs e) {
+                                          StartupEventArgs e) {
             DisplayRootViewFor<IShell>();
         }
     }
