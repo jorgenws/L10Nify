@@ -73,8 +73,16 @@
     <Compile Include="ViewModel\AddLanguageViewModel.cs" />
     <Compile Include="ViewModel\AddLocalizationKeyViewModel.cs" />
     <Compile Include="ViewModel\AddLocalizedTextViewModel.cs" />
+    <Compile Include="ViewModel\AreaTreeNodeViewModel.cs" />
+    <Compile Include="ViewModel\AreaViewModel.cs" />
+    <Compile Include="ViewModel\Factory\AreaViewModelFactory.cs" />
+    <Compile Include="ViewModel\ITreeNodeViewModel.cs" />
+    <Compile Include="ViewModel\LanguageTreeNodeViewModel.cs" />
+    <Compile Include="ViewModel\LocalizationKeyTreeNodeViewModel.cs" />
+    <Compile Include="ViewModel\LocalizedTextTreeNodeViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\ShellViewModel.cs" />
+    <Compile Include="ViewModel\TreeNodeViewModelBuilder.cs" />
     <Compile Include="View\AddLocalizationKeyView.xaml.cs">
       <DependentUpon>AddLocalizationKeyView.xaml</DependentUpon>
     </Compile>

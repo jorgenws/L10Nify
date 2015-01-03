@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using Caliburn.Micro;
 using Core;
 using Screen = Caliburn.Micro.Screen;
@@ -166,44 +164,5 @@ namespace L10Nify {
             NotifyOfPropertyChange(() => Keys);
             NotifyOfPropertyChange(() => Texts);
         }
-    }
-
-    public class AreaViewModel {
-        public Guid Id { get { return _area.Id; } }
-        public string Name { get { return _area.Name; } }
-        public string Comment { get { return _area.Comment; } }
-
-        public BitmapImage Image {
-            get {
-                if (_image == null &&
-                    _area.Image != null) {
-                    _image = new BitmapImage();
-                    _image.BeginInit();
-                    _image.StreamSource = new MemoryStream(_area.Image);
-                    _image.EndInit();
-                    _image.Freeze();
-                }
-
-                return _image;
-            }
-        }
-
-        private BitmapImage _image;
-
-        private readonly Area _area;
-
-        public AreaViewModel(Area area) {
-            _area = area;
-        }
-    }
-
-    public class AreaViewModelFactory : IAreaViewModelFactory {
-        public AreaViewModel Create(Area area) {
-            return new AreaViewModel(area);
-        }
-    }
-
-    public interface IAreaViewModelFactory {
-        AreaViewModel Create(Area area);
     }
 }

@@ -25,7 +25,7 @@
             </MenuItem>
         </Menu>
 
-        <Grid Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <!--<Grid Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -127,6 +127,6 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
             </Grid>
-        </Grid>
+        </Grid>-->
     </Grid>
 </Window>
