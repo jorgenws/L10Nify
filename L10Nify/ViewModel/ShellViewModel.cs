@@ -14,12 +14,38 @@ namespace L10Nify {
         public ICommand SaveCommand { get; private set; }
         public ICommand SaveAsCommand { get; private set; }
 
+        public ICommand SetToListCommand { get; private set; }
+        public ICommand SetToTreeCommand { get; private set; }
+
         private IWorkbench _workbench;
         public IWorkbench Workbench {
             get { return _workbench; }
             set {
                 _workbench = value;
                 NotifyOfPropertyChange(() => Workbench);
+            }
+        }
+
+        public bool IsSetToList {
+            get { return SelectedWorkbenchType == WorkbenchType.ListOriented; }
+            set {}
+        }
+
+        public bool IsSetToTree {
+            get { return SelectedWorkbenchType == WorkbenchType.TreeOriented; }
+            set { }
+        }
+
+        private WorkbenchType _selectedWorkbenchType;
+        public WorkbenchType SelectedWorkbenchType {
+            get { return _selectedWorkbenchType; }
+            set {
+                _selectedWorkbenchType = value;
+                
+                Workbench = _workbenchFactory.Create(_selectedWorkbenchType);
+                
+                NotifyOfPropertyChange(() => IsSetToList);
+                NotifyOfPropertyChange(() => IsSetToTree);
             }
         }
 
@@ -44,8 +70,18 @@ namespace L10Nify {
             SaveCommand = new RelayCommand(Save,
                                            () => _queryModel.HasFileName());
             SaveAsCommand = new RelayCommand(SaveAs);
+            SetToListCommand = new RelayCommand(SetToList);
+            SetToTreeCommand = new RelayCommand(SetToTree);
 
             _workbench = _workbenchFactory.Create(WorkbenchType.ListOriented);
+        }
+
+        public void SetToList() {
+            SelectedWorkbenchType = WorkbenchType.ListOriented;            
+        }
+
+        public void SetToTree() {
+            SelectedWorkbenchType = WorkbenchType.TreeOriented;
         }
 
         public void Undo() {

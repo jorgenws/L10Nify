@@ -23,6 +23,14 @@
                 <MenuItem Header="Undo" Command="{Binding UndoCommand}" InputGestureText="Ctrl+Z" />
                 <MenuItem Header="Redo" Command="{Binding RedoCommand}" InputGestureText="Ctrl+Y" />
             </MenuItem>
+            <MenuItem Header="_Workbench">
+                <MenuItem Header="_List oriented" 
+                          Command="{Binding SetToListCommand}" 
+                          IsChecked="{Binding IsSetToList}"/>
+                <MenuItem Header="_Tree oriented" 
+                          Command="{Binding SetToTreeCommand}" 
+                          IsChecked="{Binding IsSetToTree}" />
+            </MenuItem>
         </Menu>
 
         <ContentControl Grid.Row="1" cal:View.Model="{Binding Workbench}" />

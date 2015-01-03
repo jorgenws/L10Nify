@@ -12,7 +12,7 @@ namespace L10Nify {
             get { return _language.Id; }
         }
 
-        public string DisplayNam {
+        public string DisplayName {
             get { return _language.DisplayName; }
         }
 

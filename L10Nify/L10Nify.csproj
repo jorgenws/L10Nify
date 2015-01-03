@@ -83,6 +83,7 @@
     <Compile Include="ViewModel\LocalizedTextTreeNodeViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\ShellViewModel.cs" />
+    <Compile Include="ViewModel\TreeOrientedWorkbenchViewModel.cs" />
     <Compile Include="ViewModel\TreeViewModelBuilder.cs" />
     <Compile Include="ViewModel\Factory\WorkbenchFactory.cs" />
     <Compile Include="View\AddLocalizationKeyView.xaml.cs">
@@ -91,8 +92,23 @@
     <Compile Include="View\AddLocalizedTextView.xaml.cs">
       <DependentUpon>AddLocalizedTextView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\AreaTreeNodeView.xaml.cs">
+      <DependentUpon>AreaTreeNodeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\LanguageTreeNodeView.xaml.cs">
+      <DependentUpon>LanguageTreeNodeView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ListOrientedWorkbenchView.xaml.cs">
       <DependentUpon>ListOrientedWorkbenchView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\LocalizationKeyTreeNodeView.xaml.cs">
+      <DependentUpon>LocalizationKeyTreeNodeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\LocalizedTextTreeNodeView.xaml.cs">
+      <DependentUpon>LocalizedTextTreeNodeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TreeOrientedWorkbenchView.xaml.cs">
+      <DependentUpon>TreeOrientedWorkbenchView.xaml</DependentUpon>
     </Compile>
     <Page Include="View\AddAreaView.xaml">
       <SubType>Designer</SubType>
@@ -120,13 +136,33 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\AreaTreeNodeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\LanguageTreeNodeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\ListOrientedWorkbenchView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\LocalizationKeyTreeNodeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\LocalizedTextTreeNodeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\ShellView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\TreeOrientedWorkbenchView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

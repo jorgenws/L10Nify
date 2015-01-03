@@ -8,6 +8,7 @@ namespace L10Nify {
         private readonly ICommandInvoker _commandInvoker;
         private readonly IGuidGenerator _guidGenerator;
         private readonly IAreaViewModelFactory _areaViewModelFactory;
+        private readonly ITreeViewModelBuilder _treeViewModelBuilder;
         private readonly IWindowManager _windowManager;
         private readonly IEventAggregator _eventAggregator;
 
@@ -15,12 +16,14 @@ namespace L10Nify {
                                 ICommandInvoker commandInvoker,
                                 IGuidGenerator guidGenerator,
                                 IAreaViewModelFactory areaViewModelFactory,
+                                ITreeViewModelBuilder treeViewModelBuilder,
                                 IWindowManager windowManager,
                                 IEventAggregator eventAggregator) {
             _queryModel = queryModel;
             _commandInvoker = commandInvoker;
             _guidGenerator = guidGenerator;
             _areaViewModelFactory = areaViewModelFactory;
+            _treeViewModelBuilder = treeViewModelBuilder;
             _windowManager = windowManager;
             _eventAggregator = eventAggregator;
         }
@@ -34,6 +37,13 @@ namespace L10Nify {
                                                           _windowManager,
                                                           _eventAggregator);
 
+            if (type == WorkbenchType.TreeOriented)
+                return new TreeOrientedWorkbenchViewModel(_queryModel,
+                                                          _commandInvoker,
+                                                          _treeViewModelBuilder,
+                                                          _windowManager,
+                                                          _eventAggregator);
+
             throw new NotImplementedException(string.Format("There is no view model implemented for {0}",
                                                             type));
         }
@@ -44,6 +54,7 @@ namespace L10Nify {
     }
 
     public enum WorkbenchType {
-        ListOriented
+        ListOriented,
+        TreeOriented
     }
 }
