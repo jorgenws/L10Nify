@@ -8,17 +8,18 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="25*" />
+                <ColumnDefinition Width="25*" />
+                <ColumnDefinition Width="25*" />
+                <ColumnDefinition Width="25*" />
+            </Grid.ColumnDefinitions>
+            
+            <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Button Content="Add language" Grid.Row="0">
                     <i:Interaction.Triggers>
@@ -27,87 +28,95 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Button>
-
-                <Button Content="Add area" Grid.Row="1">
+                <ListBox Grid.Row="1" ItemsSource="{Binding Languages}" 
+                 HorizontalContentAlignment="Stretch" 
+                 VerticalContentAlignment="Stretch">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+            
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Button Content="Add area" Grid.Row="0">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
                             <cal:ActionMessage MethodName="AddArea" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Button>
-
-                <Button Content="Add key" Grid.Row="2">
+                <ListBox Grid.Row="1" 
+                 ItemsSource="{Binding Areas}" 
+                 HorizontalContentAlignment="Stretch" 
+                 VerticalContentAlignment="Stretch">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Name}" >
+                                <TextBlock.ToolTip>
+                                    <StackPanel>
+                                        <Image Source="{Binding Path=Image}" Height="100" />
+                                        <TextBlock Text="{Binding Path=Comment}" />
+                                    </StackPanel>
+                                </TextBlock.ToolTip>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+            
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Button Content="Add key" Grid.Row="0">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
                             <cal:ActionMessage MethodName="AddLocalizationKey" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Button>
-
-                <Button Content="Add text" Grid.Row="3">
+                <ListBox Grid.Row="1" 
+                 ItemsSource="{Binding Keys}" 
+                 HorizontalContentAlignment="Stretch" 
+                 VerticalContentAlignment="Stretch">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+            
+            <Grid Grid.Column="3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Button Content="Add text" Grid.Row="0">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
                             <cal:ActionMessage MethodName="AddLocalizedText" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Button>
-
-            </Grid>
-        </Grid>
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="25*" />
-                <ColumnDefinition Width="25*" />
-                <ColumnDefinition Width="25*" />
-                <ColumnDefinition Width="25*" />
-            </Grid.ColumnDefinitions>
-            <ListBox Grid.Column="0" 
-                 ItemsSource="{Binding Languages}" 
-                 HorizontalContentAlignment="Stretch" 
-                 VerticalContentAlignment="Stretch">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding}" />
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-            <ListBox Grid.Column="1" 
-                 ItemsSource="{Binding Areas}" 
-                 HorizontalContentAlignment="Stretch" 
-                 VerticalContentAlignment="Stretch">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Path=Name}" >
-                            <TextBlock.ToolTip>
-                                <StackPanel>
-                                    <Image Source="{Binding Path=Image}" Height="100" />
-                                    <TextBlock Text="{Binding Path=Comment}" />
-                                </StackPanel>
-                            </TextBlock.ToolTip>
-                            </TextBlock>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-            <ListBox Grid.Column="2" 
-                 ItemsSource="{Binding Keys}" 
-                 HorizontalContentAlignment="Stretch" 
-                 VerticalContentAlignment="Stretch">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding}" />
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-            <ListBox Grid.Column="3" 
+                <ListBox Grid.Row="1" 
                  ItemsSource="{Binding Texts}" 
                  HorizontalContentAlignment="Stretch" 
                  VerticalContentAlignment="Stretch">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding}" />
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

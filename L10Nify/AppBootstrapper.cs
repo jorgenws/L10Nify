@@ -65,9 +65,11 @@ namespace L10Nify {
 
             //Command infrastructure
             _kernel.Bind<ICommandInvoker>()
-                   .To<CommandInvoker>();
+                   .To<CommandInvoker>()
+                   .InSingletonScope();
             _kernel.Bind<ICommandHandler>()
-                   .To<LocalizationHandler>();
+                   .To<LocalizationHandler>()
+                   .InSingletonScope();
 
             //ViewModels
             _kernel.Bind<IAreaViewModelFactory>()

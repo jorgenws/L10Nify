@@ -86,16 +86,18 @@ namespace L10Nify {
 
         public void Undo() {
             _commandInvoker.Undo();
+            UpdateModel();
         }
 
         public void Redo() {
             _commandInvoker.Do();
+            UpdateModel();
         }
 
         public void New() {
             _commandInvoker.Invoke(new NewCommand());
             CommandManager.InvalidateRequerySuggested();
-            _eventAggregator.PublishOnCurrentThread(new ModelIsUpdatedFromFile());
+            UpdateModel();
         }
 
         public void Open() {
@@ -103,7 +105,7 @@ namespace L10Nify {
             if (ofd.ShowDialog() == DialogResult.OK) {
                 _commandInvoker.Invoke(new LoadCommand(ofd.FileName));
                 CommandManager.InvalidateRequerySuggested();
-                _eventAggregator.PublishOnCurrentThread(new ModelIsUpdatedFromFile());
+                UpdateModel();
             }
         }
 
@@ -116,8 +118,12 @@ namespace L10Nify {
             if (sfd.ShowDialog() == DialogResult.OK) {
                 _commandInvoker.Invoke(new SaveAsCommand(sfd.FileName));
                 CommandManager.InvalidateRequerySuggested();
-                _eventAggregator.PublishOnCurrentThread(new ModelIsUpdatedFromFile());
+                UpdateModel();
             }
+        }
+
+        private void UpdateModel() {
+            _eventAggregator.PublishOnCurrentThread(new ModelIsUpdatedFromFile());
         }
     }
 
