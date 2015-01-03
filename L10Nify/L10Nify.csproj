@@ -82,7 +82,7 @@
     <Compile Include="ViewModel\LocalizedTextTreeNodeViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\ShellViewModel.cs" />
-    <Compile Include="ViewModel\TreeNodeViewModelBuilder.cs" />
+    <Compile Include="ViewModel\TreeViewModelBuilder.cs" />
     <Compile Include="View\AddLocalizationKeyView.xaml.cs">
       <DependentUpon>AddLocalizationKeyView.xaml</DependentUpon>
     </Compile>

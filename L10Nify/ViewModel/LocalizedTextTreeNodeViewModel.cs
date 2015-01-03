@@ -16,6 +16,8 @@ namespace L10Nify {
             get { return _localizedText.KeyId; }
         }
 
+        public Guid LanguageId {get { return _localizedText.LanguageId; }}
+
         public string LocalizedText {
             get { return _localizedText.Text; }
         }
