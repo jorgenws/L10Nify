@@ -13,7 +13,6 @@ namespace L10Nify {
         public ICommand OpenCommand { get; private set; }
         public ICommand SaveCommand { get; private set; }
         public ICommand SaveAsCommand { get; private set; }
-        public ICommand QuitCommand { get; private set; }
 
         public ICommand SetToListCommand { get; private set; }
         public ICommand SetToTreeCommand { get; private set; }
@@ -79,7 +78,6 @@ namespace L10Nify {
             SaveCommand = new RelayCommand(Save,
                                            () => _queryModel.HasFileName());
             SaveAsCommand = new RelayCommand(SaveAs);
-            //QuitCommand = new RelayCommand(Quit);
             SetToListCommand = new RelayCommand(SetToList);
             SetToTreeCommand = new RelayCommand(SetToTree);
 

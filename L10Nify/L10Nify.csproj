@@ -109,6 +109,9 @@
     <Compile Include="View\MissingLocalizedTextsView.xaml.cs">
       <DependentUpon>MissingLocalizedTextsView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\ShellView.xaml.cs">
+      <DependentUpon>ShellView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\TreeOrientedWorkbenchView.xaml.cs">
       <DependentUpon>TreeOrientedWorkbenchView.xaml</DependentUpon>
     </Compile>
