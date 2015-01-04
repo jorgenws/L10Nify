@@ -20,9 +20,10 @@ namespace Core {
                                commmand.DisplayName);
         }
 
-        private void Handle(ChangeLanguageDisplayNameCommand command) {
-            _model.ChangeLanguageDisplayName(command.LanguageId,
-                                             command.NewDisplayName);
+        private void Handle(SetLanguageCommand command) {
+            _model.SetLanguage(command.LanguageId,
+                               command.IsoName,
+                               command.NewDisplayName);
         }
 
         private void Handle(RemoveLanguageCommand command) {
@@ -113,10 +114,11 @@ namespace Core {
             return new RemoveLanguageCommand(command.LanguageId);
         }
 
-        private BaseCommand BuildUndoCommand(ChangeLanguageDisplayNameCommand command) {
+        private BaseCommand BuildUndoCommand(SetLanguageCommand command) {
             var language = _model.RetriveLanguage(command.LanguageId);
-            return new ChangeLanguageDisplayNameCommand(command.LanguageId,
-                                                        language.DisplayName);
+            return new SetLanguageCommand(command.LanguageId,
+                                          command.IsoName,
+                                          language.DisplayName);
         }
 
         private BaseCommand BuildUndoCommand(RemoveLanguageCommand command) {
@@ -281,12 +283,16 @@ namespace Core {
         }
     }
 
-    public class ChangeLanguageDisplayNameCommand : BaseCommand {
+    public class SetLanguageCommand : BaseCommand {
         public Guid LanguageId { get; private set; }
+        public string IsoName { get; private set; }
         public string NewDisplayName { get; private set; }
 
-        public ChangeLanguageDisplayNameCommand(Guid languageId, string newDisplayName) {
+        public SetLanguageCommand(Guid languageId,
+                                                string isoName,
+                                                string newDisplayName) {
             LanguageId = languageId;
+            IsoName = isoName;
             NewDisplayName = newDisplayName;
         }
     }

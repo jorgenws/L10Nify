@@ -7,10 +7,9 @@ using Core;
 namespace L10Nify {
     public class ListOrientedWorkbenchViewModel : PropertyChangedBase,
                                                   IWorkbench {
-        public IEnumerable<string> Languages {
+        public IEnumerable<Language> Languages {
             get {
                 return _queryModel.RetriveLanguages()
-                                  .Select(c => c.DisplayName)
                                   .ToList();
             }
         }
@@ -65,6 +64,27 @@ namespace L10Nify {
                          c => new AddLanguageCommand(_guidGenerator.Next(),
                                                      c.IsoName,
                                                      c.LanguageDisplayName));
+        }
+
+        public void SetLanguage(Language language) {
+            if(language == null)
+                return;
+
+            var vm = new AddLanguageViewModel();
+            vm.LanguageDisplayName = language.DisplayName;
+            vm.IsoName = language.IsoName;
+
+            var dialogResult = _windowManager.ShowDialog(vm);
+            if (dialogResult.HasValue && dialogResult.Value)
+                _commandInvoker.Invoke(new SetLanguageCommand(language.Id,
+                                                              vm.IsoName,
+                                                              vm.LanguageDisplayName));
+        }
+
+        public void RemoveLanguage(Language language) {
+            if(language == null) return;
+
+            _commandInvoker.Invoke(new RemoveLanguageCommand(language.Id));
         }
 
         public void AddArea() {

@@ -123,12 +123,17 @@ namespace Core {
             _languages.Add(language.Id, language);
         }
 
-        public void ChangeLanguageDisplayName(Guid languageId,
-                                              string newDisplayName) {
+        public void SetLanguage(Guid languageId,
+                                string isoName,
+                                string newDisplayName) {
             if (!_languages.ContainsKey(languageId))
                 throw new Exception("Language does not exist");
 
+            if (_languages.Values.Any(c => c.IsoName == isoName))
+                throw new Exception("Language is already in use");
+
             _languages[languageId].DisplayName = newDisplayName;
+            _languages[languageId].IsoName = isoName;
         }
 
         public void RemoveLanguage(Guid languageId) {
@@ -232,8 +237,9 @@ namespace Core {
                              string newText);
         void RemoveLocalizedText(Guid localizedTextId);
         void AddLanguage(Language language);
-        void ChangeLanguageDisplayName(Guid languageId,
-                                       string newDisplayName);
+        void SetLanguage(Guid languageId,
+                         string isoName,
+                         string displayName);
         void RemoveLanguage(Guid languageId);
         void AddHistoryEntry(HistoryEntry entry);
         IEnumerable<Area> RetriveAreas();

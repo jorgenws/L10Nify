@@ -63,11 +63,14 @@ namespace CoreTests {
         [Test]
         public void ChangeLanguageDisplayName_IsOk_ChangedToLocalization() {
             const string newDisplayName = "displayName";
+            const string newIsoName = "bl";
             var model = CreateDefaultModel();
-            model.ChangeLanguageDisplayName(_languageId,
-                                            newDisplayName);
-            _localization.Setup(c => c.ChangeLanguageDisplayName(_languageId,
-                                                                 newDisplayName));
+            model.SetLanguage(_languageId,
+                              newIsoName,
+                              newDisplayName);
+            _localization.Setup(c => c.SetLanguage(_languageId,
+                                                   newIsoName,
+                                                   newDisplayName));
         }
 
         [Test]

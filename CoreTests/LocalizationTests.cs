@@ -312,20 +312,23 @@ namespace CoreTests {
         [Test]
         public void ChangeLanguageDisplayName_LanguageDoesNotExist_ThrowsException() {
             var localization = CreateLocalization();
-            Assert.Throws<Exception>(() => localization.ChangeLanguageDisplayName(_languageId,
-                                                                                  "test"));
+            Assert.Throws<Exception>(() => localization.SetLanguage(_languageId,
+                                                                    "iso",
+                                                                    "test"));
         }
 
         [Test]
         public void ChangeLanguageDisplayName_LanguageExists_LanguageDisplayNameChanged() {
             const string newDisplayName = "newDisplayName";
+            const string newIsoName = "bl";
             var language = CreateDefaultLanguage();
             var localization = CreateLocalization();
 
             localization.AddLanguage(language);
 
-            localization.ChangeLanguageDisplayName(language.Id,
-                                                   newDisplayName);
+            localization.SetLanguage(language.Id,
+                                     newIsoName,
+                                     newDisplayName);
 
             Assert.AreEqual(newDisplayName,
                             language.DisplayName);

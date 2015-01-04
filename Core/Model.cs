@@ -121,15 +121,18 @@ namespace Core {
             ModelHasBeenUpdated();
         }
 
-        public void ChangeLanguageDisplayName(Guid languageId,
-                                              string newDisplayName) {
-            _localization.ChangeLanguageDisplayName(languageId,
-                                                    newDisplayName);
+        public void SetLanguage(Guid languageId,
+                                string isoName,
+                                string displayName) {
+            _localization.SetLanguage(languageId,
+                                      isoName,
+                                      displayName);
             ModelHasBeenUpdated();
         }
 
         public void RemoveLanguage(Guid id) {
             _localization.RemoveLanguage(id);
+            ModelHasBeenUpdated();
         }
 
         public IEnumerable<Area> RetriveAreas() {

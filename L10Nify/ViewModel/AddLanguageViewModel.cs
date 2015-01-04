@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Caliburn.Micro;
 
 
@@ -14,7 +15,10 @@ namespace L10Nify {
             }
         }
 
-        public string IsoName {get { return SelectedLocale.TwoLetterISOLanguageName; }}
+        public string IsoName {
+            get { return SelectedLocale.Name; }
+            set { SelectedLocale = Locales.Single(c => c.Name == value); }
+        }
 
         private CultureInfo _selectedLocale;
         private string _languageDisplayName;
@@ -28,7 +32,11 @@ namespace L10Nify {
         }
 
         public IEnumerable<CultureInfo> Locales {
-            get { return CultureInfo.GetCultures(CultureTypes.NeutralCultures); }
+            get {
+                return CultureInfo.GetCultures(CultureTypes.SpecificCultures)
+                                  .OrderBy(c => c.EnglishName)
+                                  .Select(c => CultureInfo.CreateSpecificCulture(c.Name));
+            }
         }
 
         public void Ok() {
