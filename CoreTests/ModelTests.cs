@@ -15,6 +15,7 @@ namespace CoreTests {
         private Mock<ILocalizationPersister> _persister;
         private Mock<ILocalizationLoader> _loader;
         private Mock<ILocalizationBuilder> _builder;
+        private Mock<ILocalizationVisitorFactory> _visitorFactory;
 
         private Mock<ILocalization> _localization;
 
@@ -39,6 +40,7 @@ namespace CoreTests {
             _builder = new Mock<ILocalizationBuilder>();
             _builder.Setup(c => c.Build(It.IsAny<ILoadedLocalization>()))
                     .Returns(_localization.Object);
+            _visitorFactory = new Mock<ILocalizationVisitorFactory>();
         }
 
         [Test]
@@ -248,7 +250,8 @@ namespace CoreTests {
                              _localizedTextFactory.Object,
                              _persister.Object,
                              _loader.Object,
-                             _builder.Object);
+                             _builder.Object,
+                             _visitorFactory.Object);
         }
 
         private Language CreateDefaultLanguage() {

@@ -180,6 +180,11 @@ namespace Core {
             return null;
         }
 
+        public LocalizedText RetriveText(Guid keyId,
+                                         Guid languageId) {
+            return _texts.Values.SingleOrDefault(c => c.KeyId == keyId && c.LanguageId == languageId);
+        }
+
         public IEnumerable<Language> RetriveLanguages() {
             return _languages.Values;
         }
@@ -203,6 +208,10 @@ namespace Core {
                    select new MissingLocalizedText(key.AreaId,
                                                    key.Id,
                                                    language.Id);
+        }
+
+        public void Visit(ILocalizationVisitor visitor) {
+            visitor.Visit(this);
         }
     }
 
@@ -233,10 +242,13 @@ namespace Core {
         LocalizationKey RetriveKey(Guid keyId);
         IEnumerable<LocalizedText> RetriveTexts();
         LocalizedText RetiveText(Guid textId);
+        LocalizedText RetriveText(Guid keyId,
+                                  Guid languageId);
         IEnumerable<Language> RetriveLanguages();
         Language RetriveLanguage(Guid languageId);
         IEnumerable<HistoryEntry> RetriveHistory();
         IEnumerable<MissingLocalizedText> RetriveMissingLocalizedTexts();
+        void Visit(ILocalizationVisitor visitor);        
     }
 
     public class Area {

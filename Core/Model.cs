@@ -14,6 +14,7 @@ namespace Core {
         private readonly ILocalizationPersister _localizationPersister;
         private readonly ILocalizationLoader _localizationLoader;
         private readonly ILocalizationBuilder _localizationBuilder;
+        private readonly ILocalizationVisitorFactory _localizationVisitorFactory;
 
         public Model(ILanguageFactory languageFactory,
                      IHistoryEntryFactory historyEntryFactory,
@@ -22,7 +23,8 @@ namespace Core {
                      ILocalizedTextFactory localizedTextFactory,
                      ILocalizationPersister localizationPersister,
                      ILocalizationLoader localizationLoader,
-                     ILocalizationBuilder localizationBuilder) {
+                     ILocalizationBuilder localizationBuilder,
+                     ILocalizationVisitorFactory localizationVisitorFactory) {
             _languageFactory = languageFactory;
             _historyEntryFactory = historyEntryFactory;
             _areaFactory = areaFactory;
@@ -31,6 +33,7 @@ namespace Core {
             _localizationPersister = localizationPersister;
             _localizationLoader = localizationLoader;
             _localizationBuilder = localizationBuilder;
+            _localizationVisitorFactory = localizationVisitorFactory;
 
             New();
         }
@@ -219,6 +222,13 @@ namespace Core {
                                                          new List<HistoryEntry>());
             _localization = _localizationBuilder.Build(_loadedLocalization);
             ModelHasBeenUpdated();
+        }
+
+        public void ProduceResourceFile(ResourceType resourceType,
+                                        string filePath) {
+            var visitor = _localizationVisitorFactory.Create(resourceType,
+                                                             filePath);
+            _localization.Visit(visitor);
         }
 
         private void ModelHasBeenUpdated() {

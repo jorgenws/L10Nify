@@ -95,6 +95,11 @@ namespace Core {
             _model.Load(command.FilePath);
         }
 
+        private void Handle(ProduceResourceFileCommand command) {
+            _model.ProduceResourceFile(command.ResourceType,
+                                       command.FilePath);
+        }
+
         private void Handle(CommandSequence commands) {
             foreach (BaseCommand command in commands.Sequence)
                 Handle((dynamic) command);
@@ -443,6 +448,21 @@ namespace Core {
 
         public override bool ClearStack() {
             return true;
+        }
+
+        public override bool CanUndo() {
+            return false;
+        }
+    }
+
+    public class ProduceResourceFileCommand : BaseCommand {
+        public string FilePath { get; private set; }
+        public ResourceType ResourceType { get; private set; }
+
+        public ProduceResourceFileCommand(ResourceType resourceType,
+                                          string filePath) {
+            FilePath = filePath;
+            ResourceType = resourceType;
         }
 
         public override bool CanUndo() {

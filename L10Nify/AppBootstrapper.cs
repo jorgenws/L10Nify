@@ -59,6 +59,9 @@ namespace L10Nify {
             _kernel.Bind<ILocalizationLoader>()
                    .To<JsonLocalizationLoader>()
                    .InSingletonScope();
+            _kernel.Bind<ILocalizationVisitorFactory>()
+                   .To<LocalizationVisitorFactory>()
+                   .InSingletonScope();
             _kernel.Bind<IGuidGenerator>()
                    .To<GuidGenerator>()
                    .InSingletonScope();

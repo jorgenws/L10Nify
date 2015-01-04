@@ -13,9 +13,12 @@ namespace L10Nify {
         public ICommand OpenCommand { get; private set; }
         public ICommand SaveCommand { get; private set; }
         public ICommand SaveAsCommand { get; private set; }
+        public ICommand QuitCommand { get; private set; }
 
         public ICommand SetToListCommand { get; private set; }
         public ICommand SetToTreeCommand { get; private set; }
+
+        public ICommand BuildJsonResourceFileCommand { get; private set; }
 
         private IWorkbench _workbench;
 
@@ -76,8 +79,11 @@ namespace L10Nify {
             SaveCommand = new RelayCommand(Save,
                                            () => _queryModel.HasFileName());
             SaveAsCommand = new RelayCommand(SaveAs);
+            //QuitCommand = new RelayCommand(Quit);
             SetToListCommand = new RelayCommand(SetToList);
             SetToTreeCommand = new RelayCommand(SetToTree);
+
+            BuildJsonResourceFileCommand = new RelayCommand(BuildJsonResourceFile);
 
             _workbench = _workbenchFactory.Create(WorkbenchType.ListOriented);
         }
@@ -121,6 +127,13 @@ namespace L10Nify {
                 _commandInvoker.Invoke(new SaveAsCommand(sfd.FileName));
                 CommandManager.InvalidateRequerySuggested();                
             }
+        }
+
+        public void BuildJsonResourceFile() {
+            var sfd = new SaveFileDialog();
+            if (sfd.ShowDialog() == DialogResult.OK)
+                _commandInvoker.Invoke(new ProduceResourceFileCommand(ResourceType.Json,
+                                                                      sfd.FileName));
         }
     }
 }
