@@ -18,59 +18,67 @@
             
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="50*" />
+                    <RowDefinition Height="50*" />
                 </Grid.RowDefinitions>
-                <Button Content="Add language" Grid.Row="0">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <cal:ActionMessage MethodName="AddLanguage" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Button>
-                <ListBox Grid.Row="1" ItemsSource="{Binding Languages}" 
+
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Button Content="Add language" Grid.Row="0">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <cal:ActionMessage MethodName="AddLanguage" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
+                    <ListBox Grid.Row="1" ItemsSource="{Binding Languages}" 
                  HorizontalContentAlignment="Stretch" 
                  VerticalContentAlignment="Stretch">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding}" />
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </Grid>
-            
-            <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <Button Content="Add area" Grid.Row="0">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <cal:ActionMessage MethodName="AddArea" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Button>
-                <ListBox Grid.Row="1" 
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+
+                <Grid Grid.Row="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Button Content="Add area" Grid.Row="0">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <cal:ActionMessage MethodName="AddArea" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
+                    <ListBox Grid.Row="1" 
                  ItemsSource="{Binding Areas}" 
                  HorizontalContentAlignment="Stretch" 
                  VerticalContentAlignment="Stretch">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Path=Name}" >
-                                <TextBlock.ToolTip>
-                                    <StackPanel>
-                                        <Image Source="{Binding Path=Image}" Height="100" />
-                                        <TextBlock Text="{Binding Path=Comment}" />
-                                    </StackPanel>
-                                </TextBlock.ToolTip>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=Name}" >
+                                    <TextBlock.ToolTip>
+                                        <StackPanel>
+                                            <Image Source="{Binding Path=Image}" Height="100" />
+                                            <TextBlock Text="{Binding Path=Comment}" />
+                                        </StackPanel>
+                                    </TextBlock.ToolTip>
                             </TextBlock>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+
             </Grid>
-            
-            <Grid Grid.Column="2">
+
+            <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
@@ -94,7 +102,7 @@
                 </ListBox>
             </Grid>
             
-            <Grid Grid.Column="3">
+            <Grid Grid.Column="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />

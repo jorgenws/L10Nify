@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Core {
     public class Model : IQueryModel {
@@ -155,6 +154,10 @@ namespace Core {
             return _localization.RetriveHistory();
         }
 
+        public IEnumerable<MissingLocalizedText> RetriveMissingLocalizedTexts() {
+            return _localization.RetriveMissingLocalizedTexts();
+        }
+
         public bool HasFileName() {
             if (_loadedLocalization == null) return false;
             if (string.IsNullOrWhiteSpace(_loadedLocalization.FilePath)) return false;
@@ -216,6 +219,7 @@ namespace Core {
         IEnumerable<Language> RetriveLanguages();
         Language RetriveLanguage(Guid languageId);
         IEnumerable<HistoryEntry> RetriveHistoryEntries();
+        IEnumerable<MissingLocalizedText> RetriveMissingLocalizedTexts();
 
         bool HasFileName();
     }

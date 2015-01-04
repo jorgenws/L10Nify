@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Core;
 using NUnit.Framework;
 
@@ -6,6 +7,8 @@ namespace CoreTests {
     [TestFixture]
     public class LocalizationTests {
         private readonly Guid _languageId = Guid.Parse("{46E0090F-61A0-43FB-A782-AD07337F92A3}");
+        private readonly Guid _languageId2 = Guid.Parse("{C59827DC-BE64-40F9-9816-804505388440}");
+
         private const string IsoName = "no";
         private const string DisplayName = "Norsk";
 
@@ -326,6 +329,114 @@ namespace CoreTests {
 
             Assert.AreEqual(newDisplayName,
                             language.DisplayName);
+        }
+
+        [Test]
+        public void MissingLocalizedTexts_ThereNoKeyOrLanguage_EmptyList() {
+            var localization = CreateLocalization();
+            var result = localization.RetriveMissingLocalizedTexts();
+            CollectionAssert.IsEmpty(result);
+        }
+
+        [Test]
+        public void MissingLocalizedTexts_ThereIsOneKey_EmptyList() {
+            var area = CreateDefaultArea();
+            var key = CreateDefaultLocalizationKey();
+            
+            var localization = CreateLocalization();
+            localization.AddArea(area);
+            localization.AddLocalizationKey(key);
+
+            var result = localization.RetriveMissingLocalizedTexts();
+
+            CollectionAssert.IsEmpty(result);
+        }
+
+        [Test]
+        public void MissingLocalizedTexts_ThereIsOneLanguage_IsEmpty() {
+            var language = CreateDefaultLanguage();
+
+            var localization = CreateLocalization();
+
+            var result = localization.RetriveMissingLocalizedTexts();
+
+            CollectionAssert.IsEmpty(result);
+        }
+
+        [Test]
+        public void MissingLocalizedTexts_OneKeyAndOneLanguge_OneMissingText() {
+            var area = CreateDefaultArea();
+            var key = CreateDefaultLocalizationKey();
+            var language = CreateDefaultLanguage();
+
+            var localization = CreateLocalization();
+            localization.AddArea(area);
+            localization.AddLocalizationKey(key);
+            localization.AddLanguage(language);
+
+            var result = localization.RetriveMissingLocalizedTexts();
+            var missingText = result.First();
+
+            Assert.AreEqual(1,
+                            result.Count());
+            Assert.AreEqual(_areaId,
+                            missingText.AreaId);
+            Assert.AreEqual(_keyId,
+                            missingText.KeyId);
+            Assert.AreEqual(_languageId,
+                            missingText.LanguageId);
+
+        }
+
+        [Test]
+        public void MissingLocalizedTexts_OneKeyAndOneLangugeOneText_IsEmpty() {
+            var area = CreateDefaultArea();
+            var key = CreateDefaultLocalizationKey();
+            var text = CreateDefaultLocalizedText();
+            var language = CreateDefaultLanguage();
+
+            var localization = CreateLocalization();
+            localization.AddArea(area);
+            localization.AddLocalizationKey(key);
+            localization.AddLanguage(language);
+            localization.AddLocalizedText(area.Id,
+                                          text);
+
+            var result = localization.RetriveMissingLocalizedTexts();
+            
+            CollectionAssert.IsEmpty(result);
+        }
+
+        [Test]
+        public void MissingLocalizedTexts_OneKeyAndTwoLangugesOneText_OneMissingText() {
+            var area = CreateDefaultArea();
+            var key = CreateDefaultLocalizationKey();
+            var text = CreateDefaultLocalizedText();
+            var language = CreateDefaultLanguage();
+            var language2 = CreateDefaultLanguage();
+            language2.Id = _languageId2;
+            language.IsoName = "en";
+
+            var localization = CreateLocalization();
+            localization.AddArea(area);
+            localization.AddLocalizationKey(key);
+            localization.AddLanguage(language);
+            localization.AddLanguage(language2);
+            localization.AddLocalizedText(area.Id,
+                                          text);
+
+            var result = localization.RetriveMissingLocalizedTexts();
+            var missingText = result.First();
+
+            Assert.AreEqual(1,
+                            result.Count());
+            Assert.AreEqual(_areaId,
+                missingText.AreaId);
+            Assert.AreEqual(_keyId,
+                            missingText.KeyId);
+            Assert.AreEqual(_languageId2,
+                            missingText.LanguageId);
+
         }
 
         private Localization CreateLocalization() {

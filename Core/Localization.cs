@@ -191,6 +191,16 @@ namespace Core {
         public IEnumerable<HistoryEntry> RetriveHistory() {
             return _historyEntries;
         }
+
+        public IEnumerable<MissingLocalizedText> RetriveMissingLocalizedTexts() {
+            return from key in RetriveKeys()
+                   from language in RetriveLanguages()
+                   where !RetriveTexts()
+                              .Any(c => c.KeyId == key.Id && c.LanguageId == language.Id)
+                   select new MissingLocalizedText(key.AreaId,
+                                                   key.Id,
+                                                   language.Id);
+        }
     }
 
     public interface ILocalization {
@@ -223,6 +233,7 @@ namespace Core {
         IEnumerable<Language> RetriveLanguages();
         Language RetriveLanguage(Guid languageId);
         IEnumerable<HistoryEntry> RetriveHistory();
+        IEnumerable<MissingLocalizedText> RetriveMissingLocalizedTexts();
     }
 
     public class Area {
@@ -243,5 +254,19 @@ namespace Core {
         public Guid KeyId { get; set; }
         public string Text { get; set; }
         public Guid LanguageId { get; set; }
+    }
+
+    public class MissingLocalizedText {
+        public Guid AreaId { get; private set; }
+        public Guid KeyId { get; private set; }
+        public Guid LanguageId { get; private set; }
+
+        public MissingLocalizedText(Guid areaId,
+                                    Guid keyId,
+                                    Guid languageId) {
+            AreaId = areaId;
+            KeyId = keyId;
+            LanguageId = languageId;
+        }
     }
 }
