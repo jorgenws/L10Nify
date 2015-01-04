@@ -18,6 +18,7 @@ namespace L10Nify {
         public ICommand SetToTreeCommand { get; private set; }
 
         private IWorkbench _workbench;
+
         public IWorkbench Workbench {
             get { return _workbench; }
             set {
@@ -28,7 +29,7 @@ namespace L10Nify {
 
         public bool IsSetToList {
             get { return SelectedWorkbenchType == WorkbenchType.ListOriented; }
-            set {}
+            set { }
         }
 
         public bool IsSetToTree {
@@ -37,31 +38,36 @@ namespace L10Nify {
         }
 
         private WorkbenchType _selectedWorkbenchType;
+
         public WorkbenchType SelectedWorkbenchType {
             get { return _selectedWorkbenchType; }
             set {
                 _selectedWorkbenchType = value;
-                
+
                 Workbench = _workbenchFactory.Create(_selectedWorkbenchType);
-                
+
                 NotifyOfPropertyChange(() => IsSetToList);
                 NotifyOfPropertyChange(() => IsSetToTree);
             }
         }
 
+        public IMissingLocalizedTextsViewModel MissingLocalizedTexts {
+            get { return _missingLocalizedTextsViewModel; }
+        }
+
         private readonly IQueryModel _queryModel;
+        private readonly IMissingLocalizedTextsViewModel _missingLocalizedTextsViewModel;
         private readonly ICommandInvoker _commandInvoker;
         private readonly IWorkbenchFactory _workbenchFactory;
-        private readonly IEventAggregator _eventAggregator;
 
         public ShellViewModel(IQueryModel queryModel,
+                              IMissingLocalizedTextsViewModel missingLocalizedTextsViewModel,
                               ICommandInvoker commandInvoker,
-                              IWorkbenchFactory workbenchFactory,
-                              IEventAggregator eventAggregator) {
+                              IWorkbenchFactory workbenchFactory) {
             _queryModel = queryModel;
+            _missingLocalizedTextsViewModel = missingLocalizedTextsViewModel;
             _commandInvoker = commandInvoker;
             _workbenchFactory = workbenchFactory;
-            _eventAggregator = eventAggregator;
 
             UndoCommand = new RelayCommand(Undo);
             RedoCommand = new RelayCommand(Redo);
@@ -77,7 +83,7 @@ namespace L10Nify {
         }
 
         public void SetToList() {
-            SelectedWorkbenchType = WorkbenchType.ListOriented;            
+            SelectedWorkbenchType = WorkbenchType.ListOriented;
         }
 
         public void SetToTree() {
@@ -86,18 +92,15 @@ namespace L10Nify {
 
         public void Undo() {
             _commandInvoker.Undo();
-            UpdateModel();
         }
 
         public void Redo() {
             _commandInvoker.Do();
-            UpdateModel();
         }
 
         public void New() {
             _commandInvoker.Invoke(new NewCommand());
             CommandManager.InvalidateRequerySuggested();
-            UpdateModel();
         }
 
         public void Open() {
@@ -105,7 +108,6 @@ namespace L10Nify {
             if (ofd.ShowDialog() == DialogResult.OK) {
                 _commandInvoker.Invoke(new LoadCommand(ofd.FileName));
                 CommandManager.InvalidateRequerySuggested();
-                UpdateModel();
             }
         }
 
@@ -117,15 +119,8 @@ namespace L10Nify {
             var sfd = new SaveFileDialog();
             if (sfd.ShowDialog() == DialogResult.OK) {
                 _commandInvoker.Invoke(new SaveAsCommand(sfd.FileName));
-                CommandManager.InvalidateRequerySuggested();
-                UpdateModel();
+                CommandManager.InvalidateRequerySuggested();                
             }
         }
-
-        private void UpdateModel() {
-            _eventAggregator.PublishOnCurrentThread(new ModelIsUpdatedFromFile());
-        }
     }
-
-    public class ModelIsUpdatedFromFile {}
 }

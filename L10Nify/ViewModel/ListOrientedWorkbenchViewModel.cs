@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Caliburn.Micro;
 using Core;
 
 namespace L10Nify {
     public class ListOrientedWorkbenchViewModel : PropertyChangedBase,
-                                                  IWorkbench,
-                                                  IHandle<ModelIsUpdatedFromFile> {
+                                                  IWorkbench {
         public IEnumerable<string> Languages {
             get {
                 return _queryModel.RetriveLanguages()
@@ -46,21 +44,19 @@ namespace L10Nify {
         private readonly IGuidGenerator _guidGenerator;
         private readonly IAreaViewModelFactory _areaViewModelFactory;
         private readonly IWindowManager _windowManager;
-        private readonly IEventAggregator _eventAggregator;
 
         public ListOrientedWorkbenchViewModel(IQueryModel queryModel,
                                               ICommandInvoker commandInvoker,
                                               IGuidGenerator guidGenerator,
                                               IAreaViewModelFactory areaViewModelFactory,
-                                              IWindowManager windowManager,
-                                              IEventAggregator eventAggregator) {
+                                              IWindowManager windowManager) {
             _queryModel = queryModel;
             _commandInvoker = commandInvoker;
             _guidGenerator = guidGenerator;
             _areaViewModelFactory = areaViewModelFactory;
             _windowManager = windowManager;
-            _eventAggregator = eventAggregator;
-            _eventAggregator.Subscribe(this);
+
+            _queryModel.ModelHasChanged += (s, e) => RefreshView();
         }
 
         public void AddLanguage() {
@@ -89,7 +85,8 @@ namespace L10Nify {
         }
 
         public void AddLocalizedText() {
-            var vm = new AddLocalizedTextViewModel(_queryModel);
+            var vm = new AddLocalizedTextViewModel(_queryModel,
+                                                   _areaViewModelFactory);
             OpenDataView(vm,
                          c => new AddLocalizedTextCommand(c.AreaId,
                                                           c.KeyId,
@@ -103,7 +100,6 @@ namespace L10Nify {
             var result = _windowManager.ShowDialog(vm);
             if (result.HasValue && result.Value) {
                 _commandInvoker.Invoke(createCommand(vm));
-                RefreshView();
             }
         }
 
@@ -112,10 +108,6 @@ namespace L10Nify {
             NotifyOfPropertyChange(() => Areas);
             NotifyOfPropertyChange(() => Keys);
             NotifyOfPropertyChange(() => Texts);
-        }
-
-        public void Handle(ModelIsUpdatedFromFile message) {
-            RefreshView();
         }
     }
 

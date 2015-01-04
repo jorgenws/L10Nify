@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Media.Imaging;
 using Caliburn.Micro;
 using Core;
 
@@ -30,22 +31,29 @@ namespace L10Nify {
 
         public Guid LanguageId { get; set; }
 
+        private Guid _areaId;
         public Guid AreaId {
             get { return _areaId; }
             set {
                 _areaId = value;
                 NotifyOfPropertyChange(() => Keys);
+                NotifyOfPropertyChange(() => SelectedArea);
             }
+        }
+
+        public AreaViewModel SelectedArea {
+            get { return _areaViewModelFactory.Create(_queryModel.RetriveArea(AreaId)); }
         }
 
         public Guid KeyId { get; set; }
         public string Text { get; set; }
 
         private readonly IQueryModel _queryModel;
-        private Guid _areaId;
-
-        public AddLocalizedTextViewModel(IQueryModel queryModel) {
+        private readonly IAreaViewModelFactory _areaViewModelFactory;
+        
+        public AddLocalizedTextViewModel(IQueryModel queryModel, IAreaViewModelFactory areaViewModelFactory) {
             _queryModel = queryModel;
+            _areaViewModelFactory = areaViewModelFactory;
         }
 
         public void Ok() {

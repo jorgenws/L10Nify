@@ -10,22 +10,19 @@ namespace L10Nify {
         private readonly IAreaViewModelFactory _areaViewModelFactory;
         private readonly ITreeViewModelBuilder _treeViewModelBuilder;
         private readonly IWindowManager _windowManager;
-        private readonly IEventAggregator _eventAggregator;
 
         public WorkbenchFactory(IQueryModel queryModel,
                                 ICommandInvoker commandInvoker,
                                 IGuidGenerator guidGenerator,
                                 IAreaViewModelFactory areaViewModelFactory,
                                 ITreeViewModelBuilder treeViewModelBuilder,
-                                IWindowManager windowManager,
-                                IEventAggregator eventAggregator) {
+                                IWindowManager windowManager) {
             _queryModel = queryModel;
             _commandInvoker = commandInvoker;
             _guidGenerator = guidGenerator;
             _areaViewModelFactory = areaViewModelFactory;
             _treeViewModelBuilder = treeViewModelBuilder;
             _windowManager = windowManager;
-            _eventAggregator = eventAggregator;
         }
 
         public IWorkbench Create(WorkbenchType type) {
@@ -34,15 +31,13 @@ namespace L10Nify {
                                                           _commandInvoker,
                                                           _guidGenerator,
                                                           _areaViewModelFactory,
-                                                          _windowManager,
-                                                          _eventAggregator);
+                                                          _windowManager);
 
             if (type == WorkbenchType.TreeOriented)
                 return new TreeOrientedWorkbenchViewModel(_queryModel,
                                                           _commandInvoker,
                                                           _treeViewModelBuilder,
-                                                          _windowManager,
-                                                          _eventAggregator);
+                                                          _windowManager);
 
             throw new NotImplementedException(string.Format("There is no view model implemented for {0}",
                                                             type));

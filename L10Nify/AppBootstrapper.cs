@@ -81,6 +81,12 @@ namespace L10Nify {
             _kernel.Bind<IWorkbenchFactory>()
                    .To<WorkbenchFactory>()
                    .InSingletonScope();
+            _kernel.Bind<IMissingLocalizedTextViewModelFactory>()
+                   .To<MissingLocalizedTextViewModelFactory>()
+                   .InSingletonScope();
+            _kernel.Bind<IMissingLocalizedTextsViewModel>()
+                   .To<MissingLocalizedTextsViewModel>()
+                   .InSingletonScope();
         }
 
         protected override object GetInstance(Type service,

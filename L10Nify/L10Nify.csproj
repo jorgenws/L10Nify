@@ -80,6 +80,9 @@
     <Compile Include="ViewModel\ListOrientedWorkbenchViewModel.cs" />
     <Compile Include="ViewModel\LocalizationKeyTreeNodeViewModel.cs" />
     <Compile Include="ViewModel\LocalizedTextTreeNodeViewModel.cs" />
+    <Compile Include="ViewModel\MissingLocalizedTextsViewModel.cs" />
+    <Compile Include="ViewModel\Factory\MissingLocalizedTextViewModelFactory.cs" />
+    <Compile Include="ViewModel\MissingLocalizedTextViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\ShellViewModel.cs" />
     <Compile Include="ViewModel\TreeOrientedWorkbenchViewModel.cs" />
@@ -102,6 +105,9 @@
     </Compile>
     <Compile Include="View\LocalizedTextTreeNodeView.xaml.cs">
       <DependentUpon>LocalizedTextTreeNodeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\MissingLocalizedTextsView.xaml.cs">
+      <DependentUpon>MissingLocalizedTextsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\TreeOrientedWorkbenchView.xaml.cs">
       <DependentUpon>TreeOrientedWorkbenchView.xaml</DependentUpon>
@@ -145,6 +151,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\LocalizedTextTreeNodeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\MissingLocalizedTextsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

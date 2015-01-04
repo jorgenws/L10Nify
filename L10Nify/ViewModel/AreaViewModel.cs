@@ -20,6 +20,7 @@ namespace L10Nify {
         public BitmapImage Image {
             get {
                 if (_image == null &&
+                    _area != null &&
                     _area.Image != null) {
                     _image = new BitmapImage();
                     _image.BeginInit();

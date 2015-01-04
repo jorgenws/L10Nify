@@ -41,6 +41,7 @@ namespace Core {
                                            comment,
                                            image);
             _localization.AddArea(area);
+            ModelHasBeenUpdated();
         }
 
         public void SetArea(Guid areaId,
@@ -51,10 +52,12 @@ namespace Core {
                                   newName,
                                   newComment,
                                   newImage);
+            ModelHasBeenUpdated();
         }
 
         public void RemoveArea(Guid areaId) {
             _localization.RemoveArea(areaId);
+            ModelHasBeenUpdated();
         }
 
         public void AddLocalizationKey(Guid areaId,
@@ -64,16 +67,19 @@ namespace Core {
                                                                  keyId,
                                                                  key);
             _localization.AddLocalizationKey(localizationKey);
+            ModelHasBeenUpdated();
         }
 
         public void ChangeLocalizationKeyName(Guid localizationKeyId,
                                               string newKey) {
             _localization.ChangeKeyName(localizationKeyId,
                                         newKey);
+            ModelHasBeenUpdated();
         }
 
         public void RemoveLocalizationKey(Guid keyId) {
             _localization.RemoveLocalizationKey(keyId);
+            ModelHasBeenUpdated();
         }
 
         public void AddLocalizedText(Guid areaId,
@@ -87,16 +93,19 @@ namespace Core {
                                                              text);
             _localization.AddLocalizedText(areaId,
                                            localizedText);
+            ModelHasBeenUpdated();
         }
 
         public void ChangeLocalizedText(Guid textId,
                                         string newText) {
             _localization.ChangeText(textId,
                                      newText);
+            ModelHasBeenUpdated();
         }
 
         public void RemoveLocalizedText(Guid textId) {
             _localization.RemoveLocalizedText(textId);
+            ModelHasBeenUpdated();
         }
 
         public void AddLanguage(Guid languageId,
@@ -106,12 +115,14 @@ namespace Core {
                                                    isoName,
                                                    displayName);
             _localization.AddLanguage(language);
+            ModelHasBeenUpdated();
         }
 
         public void ChangeLanguageDisplayName(Guid languageId,
                                               string newDisplayName) {
             _localization.ChangeLanguageDisplayName(languageId,
                                                     newDisplayName);
+            ModelHasBeenUpdated();
         }
 
         public void RemoveLanguage(Guid id) {
@@ -196,6 +207,7 @@ namespace Core {
         public void Load(string filePath) {
             _loadedLocalization = _localizationLoader.Load(filePath);
             _localization = _localizationBuilder.Build(_loadedLocalization);
+            ModelHasBeenUpdated();
         }
 
         public void New() {
@@ -206,7 +218,16 @@ namespace Core {
                                                          new List<Language>(),
                                                          new List<HistoryEntry>());
             _localization = _localizationBuilder.Build(_loadedLocalization);
+            ModelHasBeenUpdated();
         }
+
+        private void ModelHasBeenUpdated() {
+            if (ModelHasChanged != null)
+                ModelHasChanged(this,
+                                null);
+        }
+
+        public event EventHandler ModelHasChanged;
     }
 
     public interface IQueryModel {
@@ -220,7 +241,7 @@ namespace Core {
         Language RetriveLanguage(Guid languageId);
         IEnumerable<HistoryEntry> RetriveHistoryEntries();
         IEnumerable<MissingLocalizedText> RetriveMissingLocalizedTexts();
-
         bool HasFileName();
+        event EventHandler ModelHasChanged;
     }
 }

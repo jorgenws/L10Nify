@@ -152,7 +152,10 @@ namespace Core {
         }
 
         public Area RetriveArea(Guid areaId) {
-            return _area[areaId];
+            if (_area.ContainsKey(areaId))
+                return _area[areaId];
+
+            return null;
         }
 
         public IEnumerable<LocalizationKey> RetriveKeys() {
