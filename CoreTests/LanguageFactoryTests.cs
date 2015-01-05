@@ -8,6 +8,7 @@ namespace CoreTests {
         private readonly Guid _id = Guid.Parse("{26766087-2DB4-469B-8BA0-5F265C5DFF01}");
         private const string IsoName = "NO";
         private const string DisplayName = "Norsk";
+        private const int LCID = 1;
 
         [Test]
         public void Create_LanguageIdIsEmpty_ThrowsNotSupportedException() {
@@ -15,6 +16,7 @@ namespace CoreTests {
 
             Assert.Throws<NotSupportedException>(() => factory.Create(Guid.Empty,
                                                                       IsoName,
+                                                                      LCID,
                                                                       DisplayName));
         }
 
@@ -24,13 +26,17 @@ namespace CoreTests {
 
             var language = factory.Create(_id,
                                           IsoName,
+                                          LCID,
                                           DisplayName);
             Assert.AreEqual(_id,
                             language.Id);
             Assert.AreEqual(IsoName,
-                            language.IsoName);
+                            language.LanguageRegion);
             Assert.AreEqual(DisplayName,
                             language.DisplayName);
+            Assert.AreEqual(LCID,
+                            language.LCID);
+
         }
 
         private LanguageFactory CreateLanguageFactory() {

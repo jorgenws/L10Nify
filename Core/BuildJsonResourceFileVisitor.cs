@@ -30,7 +30,7 @@ namespace Core {
                     }
                 }
                 languageResources.Add(new LanguageResource {
-                                                               IsoName = language.IsoName,
+                                                               IsoName = language.LanguageRegion,
                                                                Keys = localizationKeyResources.ToArray()
                                                            });
             }

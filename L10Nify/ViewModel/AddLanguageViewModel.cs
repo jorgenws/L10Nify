@@ -15,10 +15,8 @@ namespace L10Nify {
             }
         }
 
-        public string IsoName {
-            get { return SelectedLocale.Name; }
-            set { SelectedLocale = Locales.Single(c => c.Name == value); }
-        }
+        public string LanguageRegion { get; set; }
+        public int LCID { get; set; }
 
         private CultureInfo _selectedLocale;
         private string _languageDisplayName;
@@ -28,6 +26,11 @@ namespace L10Nify {
             set {
                 _selectedLocale = value;
                 LanguageDisplayName = _selectedLocale.DisplayName;
+                var region = new RegionInfo(_selectedLocale.LCID);
+                LanguageRegion = string.Format("{0}-{1}",
+                                               _selectedLocale.TwoLetterISOLanguageName,
+                                               region.TwoLetterISORegionName);
+                LCID = _selectedLocale.LCID;
             }
         }
 
@@ -40,13 +43,17 @@ namespace L10Nify {
         }
 
         public void Ok() {
-            if (SelectedLocale == null) return;
+            if (string.IsNullOrWhiteSpace(LanguageRegion)) return;
 
             TryClose(true);
         }
 
         public void Cancel() {
             TryClose(false);
+        }
+
+        public void SetCultureInfo(int lcid) {
+            SelectedLocale = Locales.Single(c => c.LCID == lcid);
         }
     }
 }

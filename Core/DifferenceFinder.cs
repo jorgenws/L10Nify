@@ -43,7 +43,7 @@ namespace Core {
                                        Language y) {
             if (x == y)
                 throw new NotSupportedException("This method compares objects by value");
-            return x.Id == y.Id && x.IsoName == y.IsoName && x.DisplayName == y.DisplayName;
+            return x.Id == y.Id && x.LanguageRegion == y.LanguageRegion && x.DisplayName == y.DisplayName;
         }
 
         private bool AreAreasEqual(Area x,

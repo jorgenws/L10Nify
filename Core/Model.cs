@@ -73,10 +73,12 @@ namespace Core {
             ModelHasBeenUpdated();
         }
 
-        public void ChangeLocalizationKeyName(Guid localizationKeyId,
-                                              string newKey) {
-            _localization.ChangeKeyName(localizationKeyId,
-                                        newKey);
+        public void SetLocalizationKey(Guid localizationKeyId,
+                                           Guid areaId,
+                                           string newKey) {
+            _localization.ChangeKey(localizationKeyId,
+                                    areaId,
+                                    newKey);
             ModelHasBeenUpdated();
         }
 
@@ -99,10 +101,16 @@ namespace Core {
             ModelHasBeenUpdated();
         }
 
-        public void ChangeLocalizedText(Guid textId,
-                                        string newText) {
-            _localization.ChangeText(textId,
-                                     newText);
+        public void SetLocalizedText(Guid areaId,
+                                     Guid keyId,
+                                     Guid textId,
+                                     Guid languageId,
+                                     string newText) {
+            _localization.SetText(areaId,
+                                  keyId,
+                                  textId,
+                                  languageId,
+                                  newText);
             ModelHasBeenUpdated();
         }
 
@@ -112,20 +120,24 @@ namespace Core {
         }
 
         public void AddLanguage(Guid languageId,
-                                string isoName,
+                                string languageRegion,
+                                int lcid,
                                 string displayName) {
             var language = _languageFactory.Create(languageId,
-                                                   isoName,
+                                                   languageRegion,
+                                                   lcid,
                                                    displayName);
             _localization.AddLanguage(language);
             ModelHasBeenUpdated();
         }
 
         public void SetLanguage(Guid languageId,
-                                string isoName,
+                                string languageRegion,
+                                int lcid,
                                 string displayName) {
             _localization.SetLanguage(languageId,
-                                      isoName,
+                                      languageRegion,
+                                      lcid,
                                       displayName);
             ModelHasBeenUpdated();
         }

@@ -22,6 +22,7 @@ namespace CoreTests {
         private readonly Guid _languageId = Guid.Parse("{B031E3C4-6143-4C5E-9E7B-DC427B9E96EB}");
         private const string IsoName = "no";
         private const string DisplayName = "Norsk";
+        private const int LCID = 1;
 
         private readonly Guid _areaId = Guid.Parse("{357122ED-F1E4-4B8A-85E2-187DEEFB333F}");
         private readonly Guid _keyId = Guid.Parse("{BBE95265-4769-4C7D-B0BE-EAA1B92E8F6C}");
@@ -49,12 +50,14 @@ namespace CoreTests {
 
             _languageFactory.Setup(c => c.Create(_languageId,
                                                  IsoName,
+                                                 LCID,
                                                  DisplayName))
                             .Returns(language);
 
             var model = CreateDefaultModel();
             model.AddLanguage(_languageId,
                               IsoName,
+                              LCID,
                               DisplayName);
 
             _localization.Verify(c => c.AddLanguage(language));
@@ -63,14 +66,17 @@ namespace CoreTests {
         [Test]
         public void ChangeLanguageDisplayName_IsOk_ChangedToLocalization() {
             const string newDisplayName = "displayName";
-            const string newIsoName = "bl";
+            const string newLanguageRegion = "bl";
+            const int newLcid = 2;
             var model = CreateDefaultModel();
             model.SetLanguage(_languageId,
-                              newIsoName,
+                              newLanguageRegion,
+                              newLcid,
                               newDisplayName);
-            _localization.Setup(c => c.SetLanguage(_languageId,
-                                                   newIsoName,
-                                                   newDisplayName));
+            _localization.Verify(c => c.SetLanguage(_languageId,
+                                                    newLanguageRegion,
+                                                    newLcid,
+                                                    newDisplayName));
         }
 
         [Test]
@@ -174,11 +180,13 @@ namespace CoreTests {
             const string areaName = "name";
             var model = CreateDefaultModel();
 
-            model.ChangeLocalizationKeyName(_areaId,
-                                            areaName);
+            model.SetLocalizationKey(_keyId,
+                                     _areaId,
+                                     areaName);
 
-            _localization.Verify(c => c.ChangeKeyName(_areaId,
-                                                      areaName));
+            _localization.Verify(c => c.ChangeKey(_keyId,
+                                                  _areaId,
+                                                  areaName));
         }
 
         [Test]
@@ -208,11 +216,17 @@ namespace CoreTests {
             const string text = "name";
             var model = CreateDefaultModel();
 
-            model.ChangeLocalizedText(_areaId,
-                                      text);
+            model.SetLocalizedText(_areaId,
+                                   _keyId,
+                                   _textId,
+                                   _languageId,
+                                   text);
 
-            _localization.Verify(c => c.ChangeText(_areaId,
-                                                   text));
+            _localization.Verify(c => c.SetText(_areaId,
+                                                _keyId,
+                                                _textId,
+                                                _languageId,
+                                                text));
         }
 
         [Test]

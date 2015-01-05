@@ -67,11 +67,15 @@ namespace Core {
             _keys.Add(key.Id, key);
         }
 
-        public void ChangeKeyName(Guid keyId,
-                                  string newKeyName) {
+        public void ChangeKey(Guid keyId,
+                              Guid areaId,
+                              string newKeyName) {
             if (!_keys.ContainsKey(keyId))
                 throw new Exception("Key does not exist");
+            if (!_area.ContainsKey(areaId))
+                throw new Exception("Area does not exist");
 
+            _keys[keyId].AreaId = areaId;
             _keys[keyId].Key = newKeyName;
         }
 
@@ -97,17 +101,31 @@ namespace Core {
                 throw new Exception("Cannot find key");
 
             if (_texts.ContainsKey(text.Id) || _texts.Values.Any(c => c.LanguageId == text.LanguageId && c.KeyId == text.KeyId))
-                throw new Exception("Cannot add the same language twice");
+                throw new Exception("Cannot set the same language twice");
 
             _texts.Add(text.Id,
                        text);
         }
 
-        public void ChangeText(Guid textId,
-                                    string newText) {
+        public void SetText(Guid areaId,
+                            Guid keyId,
+                            Guid textId,
+                            Guid languageId,
+                            string newText) {
+            if (!_area.ContainsKey(areaId))
+                throw new Exception("Cannot find area");
+
+            if (!_keys.ContainsKey(keyId))
+                throw new Exception("Cannot find key");
+
             if (!_texts.ContainsKey(textId))
                 throw new Exception("Text does not exist");
 
+            if (_texts.Values.Any(c => c.LanguageId == languageId && c.KeyId == keyId && c.Id != textId))
+                throw new Exception("Cannot add the same language twice");
+
+            _texts[textId].KeyId = keyId;
+            _texts[textId].LanguageId = languageId;
             _texts[textId].Text = newText;
         }
 
@@ -117,23 +135,27 @@ namespace Core {
         }
 
         public void AddLanguage(Language language) {
-            if (_languages.ContainsKey(language.Id) || _languages.Values.Any(c => c.IsoName == language.IsoName))
+            if (_languages.ContainsKey(language.Id) || _languages.Values.Any(c => c.LanguageRegion == language.LanguageRegion))
                 throw new Exception("Cannot add more then one language with the same id");
 
             _languages.Add(language.Id, language);
         }
 
         public void SetLanguage(Guid languageId,
-                                string isoName,
-                                string newDisplayName) {
+                                string languageRegion,
+                                int lcid,
+                                string displayName) {
             if (!_languages.ContainsKey(languageId))
                 throw new Exception("Language does not exist");
 
-            if (_languages.Values.Any(c => c.IsoName == isoName))
+            if (_languages.Values.Any(c => c.LanguageRegion == languageRegion))
                 throw new Exception("Language is already in use");
 
-            _languages[languageId].DisplayName = newDisplayName;
-            _languages[languageId].IsoName = isoName;
+            var language = _languages[languageId];
+
+            language.DisplayName = displayName;
+            language.LanguageRegion = languageRegion;
+            language.LCID = lcid;
         }
 
         public void RemoveLanguage(Guid languageId) {
@@ -228,17 +250,22 @@ namespace Core {
                      byte[] newImage);
         void RemoveArea(Guid areaId);
         void AddLocalizationKey(LocalizationKey key);
-        void ChangeKeyName(Guid keyId,
-                           string newKeyName);
+        void ChangeKey(Guid keyId,
+                       Guid areaId,
+                       string newKeyName);
         void RemoveLocalizationKey(Guid itemId);
         void AddLocalizedText(Guid areaId,
                               LocalizedText text);
-        void ChangeText(Guid textId,
-                             string newText);
+        void SetText(Guid areaId,
+                     Guid keyId,
+                     Guid textId,
+                     Guid languageId,
+                     string newText);
         void RemoveLocalizedText(Guid localizedTextId);
         void AddLanguage(Language language);
         void SetLanguage(Guid languageId,
-                         string isoName,
+                         string languageRegion,
+                         int lcid,
                          string displayName);
         void RemoveLanguage(Guid languageId);
         void AddHistoryEntry(HistoryEntry entry);

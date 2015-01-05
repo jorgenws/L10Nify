@@ -17,12 +17,14 @@ namespace Core {
         private void Handle(AddLanguageCommand commmand) {
             _model.AddLanguage(commmand.LanguageId,
                                commmand.IsoName,
+                               commmand.LCID,
                                commmand.DisplayName);
         }
 
         private void Handle(SetLanguageCommand command) {
             _model.SetLanguage(command.LanguageId,
-                               command.IsoName,
+                               command.LanguageRegion,
+                               command.LCID,
                                command.NewDisplayName);
         }
 
@@ -38,9 +40,12 @@ namespace Core {
                                     command.Text);
         }
 
-        private void Handle(ChangeLocalizedTextCommand command) {
-            _model.ChangeLocalizedText(command.TextId,
-                                       command.NewText);
+        private void Handle(SetLocalizedTextCommand command) {
+            _model.SetLocalizedText(command.AreaId,
+                                    command.KeyId,
+                                    command.TextId,
+                                    command.LanguageId,
+                                    command.NewText);
         }
 
         private void Handle(RemoveLocalizedTextCommand command) {
@@ -53,9 +58,10 @@ namespace Core {
                                       command.KeyName);
         }
 
-        private void Handle(ChangeLocalizationKeyNameCommand command) {
-            _model.ChangeLocalizationKeyName(command.LocalizationKeyId,
-                                             command.NewKeyName);
+        private void Handle(SetLocalizationKeyNameCommand command) {
+            _model.SetLocalizationKey(command.LocalizationKeyId,
+                                          command.AreaId,
+                                          command.NewKeyName);
         }
 
         private void Handle(RemoveLocalizationKeyCommand command) {
@@ -117,7 +123,8 @@ namespace Core {
         private BaseCommand BuildUndoCommand(SetLanguageCommand command) {
             var language = _model.RetriveLanguage(command.LanguageId);
             return new SetLanguageCommand(command.LanguageId,
-                                          command.IsoName,
+                                          language.LanguageRegion,
+                                          language.LCID,
                                           language.DisplayName);
         }
 
@@ -129,7 +136,8 @@ namespace Core {
                                                   .ToList();
             //create command sequence
             undoCommands.Add(new AddLanguageCommand(language.Id,
-                                                    language.IsoName,
+                                                    language.LanguageRegion,
+                                                    language.LCID,
                                                     language.DisplayName));
             foreach (var text in textsThatUsesThisLanguage) {
                 var key = _model.RetriveLocalizationKey(text.KeyId);
@@ -147,10 +155,14 @@ namespace Core {
             return new RemoveLocalizedTextCommand(command.TextId);
         }
 
-        private BaseCommand BuildUndoCommand(ChangeLocalizedTextCommand command) {
+        private BaseCommand BuildUndoCommand(SetLocalizedTextCommand command) {
+            var key = _model.RetriveLocalizationKey(command.KeyId);
             var text = _model.RetriveLocalizedText(command.TextId);
-            return new ChangeLocalizedTextCommand(text.Id,
-                                                  text.Text);
+            return new SetLocalizedTextCommand(text.Id,
+                                               text.KeyId,
+                                               key.AreaId,
+                                               text.LanguageId,
+                                               text.Text);
         }
 
         private BaseCommand BuildUndoCommand(RemoveLocalizedTextCommand command) {
@@ -167,10 +179,11 @@ namespace Core {
             return new RemoveLocalizationKeyCommand(command.KeyId);
         }
 
-        private BaseCommand BuildUndoCommand(ChangeLocalizationKeyNameCommand command) {
+        private BaseCommand BuildUndoCommand(SetLocalizationKeyNameCommand command) {
             var key = _model.RetriveLocalizationKey(command.LocalizationKeyId);
-            return new ChangeLocalizationKeyNameCommand(key.Id,
-                                                    key.Key);
+            return new SetLocalizationKeyNameCommand(key.Id,
+                                                     command.AreaId,
+                                                     key.Key);
         }
 
         private BaseCommand BuildUndoCommand(RemoveLocalizationKeyCommand command) {
@@ -273,26 +286,32 @@ namespace Core {
         public Guid LanguageId { get; private set; }
         public string IsoName { get; private set; }
         public string DisplayName { get; private set; }
+        public int LCID { get; private set; }
 
         public AddLanguageCommand(Guid languageId,
                                   string isoName,
+                                  int lcid,
                                   string displayName) {
             LanguageId = languageId;
             IsoName = isoName;
+            LCID = lcid;
             DisplayName = displayName;
         }
     }
 
     public class SetLanguageCommand : BaseCommand {
         public Guid LanguageId { get; private set; }
-        public string IsoName { get; private set; }
+        public string LanguageRegion { get; private set; }
+        public int LCID { get; private set; }
         public string NewDisplayName { get; private set; }
 
         public SetLanguageCommand(Guid languageId,
-                                                string isoName,
-                                                string newDisplayName) {
+                                  string languageRegion,
+                                  int lcid,
+                                  string newDisplayName) {
             LanguageId = languageId;
-            IsoName = isoName;
+            LanguageRegion = languageRegion;
+            LCID = lcid;
             NewDisplayName = newDisplayName;
         }
     }
@@ -325,12 +344,22 @@ namespace Core {
         }
     }
 
-    public class ChangeLocalizedTextCommand : BaseCommand {
+    public class SetLocalizedTextCommand : BaseCommand {
         public Guid TextId { get; private set; }
+        public Guid KeyId { get; private set; }
+        public Guid AreaId { get; private set; }
+        public Guid LanguageId { get; private set; }
         public string NewText { get; private set; }
 
-        public ChangeLocalizedTextCommand(Guid textId, string newText) {
+        public SetLocalizedTextCommand(Guid textId,
+                                       Guid keyId,
+                                       Guid areaId,
+                                       Guid languageId,
+                                       string newText) {
             TextId = textId;
+            KeyId = keyId;
+            AreaId = areaId;
+            LanguageId = languageId;
             NewText = newText;
         }
     }
@@ -357,12 +386,14 @@ namespace Core {
         }
     }
 
-    public class ChangeLocalizationKeyNameCommand : BaseCommand {
+    public class SetLocalizationKeyNameCommand : BaseCommand {
         public Guid LocalizationKeyId { get; private set; }
+        public Guid AreaId { get; private set; }
         public string NewKeyName { get; private set; }
 
-        public ChangeLocalizationKeyNameCommand(Guid localizationKeyId, string newKeyName) {
+        public SetLocalizationKeyNameCommand(Guid localizationKeyId, Guid areaId, string newKeyName) {
             LocalizationKeyId = localizationKeyId;
+            AreaId = areaId;
             NewKeyName = newKeyName;
         }
     }

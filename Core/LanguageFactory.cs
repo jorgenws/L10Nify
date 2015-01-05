@@ -3,14 +3,16 @@
 namespace Core {
     public class LanguageFactory : ILanguageFactory {
         public Language Create(Guid languageId,
-                               string isoName,
+                               string languageRegion,
+            int lcid,
                                string displayName) {
             if (languageId == Guid.Empty)
                 throw new NotSupportedException("Language id  cannot be empty");
 
             return new Language {
                                     Id = languageId,
-                                    IsoName = isoName,
+                                    LCID = lcid,
+                                    LanguageRegion = languageRegion,
                                     DisplayName = displayName
                                 };
         }
@@ -18,7 +20,8 @@ namespace Core {
 
     public interface ILanguageFactory {
         Language Create(Guid languageId,
-                        string isoName,
+                        string languageRegion,
+                        int lcid,
                         string displayName);
     }
 }

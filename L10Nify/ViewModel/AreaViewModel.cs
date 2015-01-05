@@ -17,6 +17,8 @@ namespace L10Nify {
             get { return _area.Comment; }
         }
 
+        public byte[] ImageSource { get { return _area.Image; } }
+
         public BitmapImage Image {
             get {
                 if (_image == null &&

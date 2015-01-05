@@ -91,7 +91,7 @@ namespace Core {
         private Language CopyLanguage(Language language) {
             return new Language {
                                     Id = language.Id,
-                                    IsoName = language.IsoName,
+                                    LanguageRegion = language.LanguageRegion,
                                     DisplayName = language.DisplayName
                                 };
         }

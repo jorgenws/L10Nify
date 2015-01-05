@@ -262,8 +262,9 @@ namespace CoreTests {
         [Test]
         public void ChangeKeyName_KeyDoesNotExist_ThrowsException() {
             var localization = CreateLocalization();
-            Assert.Throws<Exception>(() => localization.ChangeKeyName(_areaId,
-                                                                      "test"));
+            Assert.Throws<Exception>(() => localization.ChangeKey(_keyId,
+                                                                  _areaId,
+                                                                  "test"));
         }
 
         [Test]
@@ -276,8 +277,9 @@ namespace CoreTests {
             localization.AddArea(area);
             localization.AddLocalizationKey(key);
 
-            localization.ChangeKeyName(key.Id,
-                                       newKey);
+            localization.ChangeKey(key.Id,
+                                   _areaId,
+                                   newKey);
             Assert.AreEqual(newKey,
                             key.Key);
         }
@@ -285,8 +287,11 @@ namespace CoreTests {
         [Test]
         public void ChangeText_TextDoesNotExist_ThrowsException() {
             var localization = CreateLocalization();
-            Assert.Throws<Exception>(() => localization.ChangeText(_textId,
-                                                                   "test"));
+            Assert.Throws<Exception>(() => localization.SetText(_areaId,
+                                                                _keyId,
+                                                                _textId,
+                                                                _languageId,
+                                                                "test"));
         }
 
         [Test]
@@ -302,8 +307,11 @@ namespace CoreTests {
             localization.AddLocalizedText(area.Id,
                                           text);
 
-            localization.ChangeText(text.Id,
-                                    newText);
+            localization.SetText(area.Id,
+                                 key.Id,
+                                 text.Id,
+                                 _languageId,
+                                 newText);
 
             Assert.AreEqual(newText,
                             text.Text);
@@ -314,24 +322,31 @@ namespace CoreTests {
             var localization = CreateLocalization();
             Assert.Throws<Exception>(() => localization.SetLanguage(_languageId,
                                                                     "iso",
+                                                                    1,
                                                                     "test"));
         }
 
         [Test]
         public void ChangeLanguageDisplayName_LanguageExists_LanguageDisplayNameChanged() {
             const string newDisplayName = "newDisplayName";
-            const string newIsoName = "bl";
+            const string newLanguageRegion = "bl";
+            const int newLcid = 2;
             var language = CreateDefaultLanguage();
             var localization = CreateLocalization();
 
             localization.AddLanguage(language);
 
             localization.SetLanguage(language.Id,
-                                     newIsoName,
+                                     newLanguageRegion,
+                                     newLcid,
                                      newDisplayName);
 
             Assert.AreEqual(newDisplayName,
                             language.DisplayName);
+            Assert.AreEqual(newLanguageRegion,
+                            language.LanguageRegion);
+            Assert.AreEqual(newLcid,
+                            language.LCID);
         }
 
         [Test]
@@ -418,7 +433,7 @@ namespace CoreTests {
             var language = CreateDefaultLanguage();
             var language2 = CreateDefaultLanguage();
             language2.Id = _languageId2;
-            language.IsoName = "en";
+            language.LanguageRegion = "en";
 
             var localization = CreateLocalization();
             localization.AddArea(area);
@@ -449,7 +464,7 @@ namespace CoreTests {
         private Language CreateDefaultLanguage() {
             return new Language {
                                     Id = _languageId,
-                                    IsoName = IsoName,
+                                    LanguageRegion = IsoName,
                                     DisplayName = DisplayName
                                 };
         }

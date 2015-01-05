@@ -25,7 +25,7 @@ namespace CoreTests {
         public void Build_HasOneLanguageAndOneHistoryEntry_CreatesACopy() {
             var language = new Language {
                                             Id = _languageId,
-                                            IsoName = IsoName,
+                                            LanguageRegion = IsoName,
                                             DisplayName = DisplayName
                                         };
             var historyEntry = new HistoryEntry(_date,
@@ -53,8 +53,8 @@ namespace CoreTests {
                               copiedLanguage);
             Assert.AreEqual(copiedLanguage.Id,
                             language.Id);
-            Assert.AreEqual(copiedLanguage.IsoName,
-                            language.IsoName);
+            Assert.AreEqual(copiedLanguage.LanguageRegion,
+                            language.LanguageRegion);
             Assert.AreEqual(copiedLanguage.DisplayName,
                             language.DisplayName);
             Assert.AreNotSame(historyEntry,

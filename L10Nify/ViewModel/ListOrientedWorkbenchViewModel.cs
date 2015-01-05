@@ -22,18 +22,16 @@ namespace L10Nify {
             }
         }
 
-        public IEnumerable<string> Keys {
+        public IEnumerable<LocalizationKey> Keys {
             get {
                 return _queryModel.RetriveLocalizationKeys()
-                                  .Select(c => c.Key)
                                   .ToList();
             }
         }
 
-        public IEnumerable<string> Texts {
+        public IEnumerable<LocalizedText> Texts {
             get {
                 return _queryModel.RetriveLocalizedTexts()
-                                  .Select(c => c.Text)
                                   .ToList();
             }
         }
@@ -62,7 +60,8 @@ namespace L10Nify {
             var vm = new AddLanguageViewModel();
             OpenDataView(vm,
                          c => new AddLanguageCommand(_guidGenerator.Next(),
-                                                     c.IsoName,
+                                                     c.LanguageRegion,
+                                                     c.LCID,
                                                      c.LanguageDisplayName));
         }
 
@@ -71,13 +70,13 @@ namespace L10Nify {
                 return;
 
             var vm = new AddLanguageViewModel();
-            vm.LanguageDisplayName = language.DisplayName;
-            vm.IsoName = language.IsoName;
+            vm.SetCultureInfo(language.LCID);
 
             var dialogResult = _windowManager.ShowDialog(vm);
             if (dialogResult.HasValue && dialogResult.Value)
                 _commandInvoker.Invoke(new SetLanguageCommand(language.Id,
-                                                              vm.IsoName,
+                                                              vm.LanguageRegion,
+                                                              vm.LCID,
                                                               vm.LanguageDisplayName));
         }
 
@@ -96,12 +95,50 @@ namespace L10Nify {
                                                  c.Image));
         }
 
-        public void AddLocalizationKey() {
+        public void SetArea(AreaViewModel areaViewModel) {
+            if (areaViewModel == null) return;
+
+            var vm = new AddAreaViewModel();
+            vm.AreaName = areaViewModel.Name;
+            vm.Comment = areaViewModel.Comment;
+            vm.Image = areaViewModel.ImageSource;
+            var dialogresult = _windowManager.ShowDialog(vm);
+            if (dialogresult.HasValue && dialogresult.Value)
+                _commandInvoker.Invoke(new SetAreaCommand(areaViewModel.Id,
+                                                          vm.AreaName,
+                                                          vm.Comment,
+                                                          vm.Image));
+        }
+
+        public void RemoveArea(AreaViewModel areaViewModel) {
+            if (areaViewModel == null) return;
+
+            _commandInvoker.Invoke(new RemoveAreaCommand(areaViewModel.Id));
+        }
+
+        public void AddKey() {
             var vm = new AddLocalizationKeyViewModel(_queryModel);
             OpenDataView(vm,
                          c => new AddLocalizationKeyCommand(c.AreaId,
                                                             _guidGenerator.Next(),
                                                             c.KeyName));
+        }
+
+        public void SetKey(LocalizationKey key) {
+            if (key == null) return;
+
+            var vm = new AddLocalizationKeyViewModel(_queryModel);
+            vm.AreaId = key.AreaId;
+            vm.KeyName = key.Key;
+            var dialogresult = _windowManager.ShowDialog(vm);
+            if(dialogresult.HasValue && dialogresult.Value)
+                _commandInvoker.Invoke(new SetLocalizationKeyNameCommand(key.Id, vm.AreaId, vm.KeyName));
+        }
+
+        public void RemoveKey(LocalizationKey key) {
+            if (key == null) return;
+
+            _commandInvoker.Invoke(new RemoveLocalizationKeyCommand(key.Id));
         }
 
         public void AddLocalizedText() {
@@ -113,6 +150,32 @@ namespace L10Nify {
                                                           _guidGenerator.Next(),
                                                           c.LanguageId,
                                                           c.Text));
+        }
+
+        public void SetLocalizedText(LocalizedText text) {
+            if (text == null) return;
+
+            var key = _queryModel.RetriveLocalizationKey(text.KeyId);
+
+            var vm = new AddLocalizedTextViewModel(_queryModel,
+                                                   _areaViewModelFactory);
+            vm.KeyId = text.KeyId;
+            vm.LanguageId = text.LanguageId;
+            vm.AreaId = key.AreaId;
+            vm.Text = text.Text;
+            var dialogresult = _windowManager.ShowDialog(vm);
+            if (dialogresult.HasValue && dialogresult.Value)
+                _commandInvoker.Invoke(new SetLocalizedTextCommand(text.Id,
+                                                                   vm.KeyId,
+                                                                   vm.AreaId,
+                                                                   vm.LanguageId,
+                                                                   vm.Text));
+        }
+
+        public void RemoveLocalizedText(LocalizedText text) {
+            if (text == null) return;
+
+            _commandInvoker.Invoke(new RemoveLocalizedTextCommand(text.Id));
         }
 
         private void OpenDataView<T>(T vm,
