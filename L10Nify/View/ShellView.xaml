@@ -33,6 +33,7 @@
             </MenuItem>
             <MenuItem Header="_Resource files">
                 <MenuItem Header="Build _JSON file" Command="{Binding BuildJsonResourceFileCommand}" />
+                <MenuItem Header="Build ._NET file" Command="{Binding BuildDotNetResourceFileCommand}" />
             </MenuItem>
         </Menu>
         <Grid Grid.Row="1">

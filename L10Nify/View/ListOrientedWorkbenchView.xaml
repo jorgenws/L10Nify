@@ -237,7 +237,7 @@
                  VerticalContentAlignment="Stretch">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding}" />
+                            <TextBlock Text="{Binding Text}" />
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>

@@ -6,6 +6,8 @@ namespace Core {
                                            string filePath) {
             if (resourceType == ResourceType.Json)
                 return new BuildJsonResourceFileVisitor(filePath);
+            if (resourceType == ResourceType.DotNet)
+                return new BuildDotNetResourceFilesVisitor(filePath);
 
             throw new NotImplementedException(string.Format("There is no implementation for {0}",
                                                             resourceType));
@@ -18,6 +20,7 @@ namespace Core {
     }
 
     public enum ResourceType {
-        Json
+        Json,
+        DotNet
     }
 }
