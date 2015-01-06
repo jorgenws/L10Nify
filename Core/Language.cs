@@ -6,5 +6,6 @@ namespace Core {
         public string LanguageRegion { get; set; }
         public int LCID { get; set; }
         public string DisplayName { get; set; }
+        public bool IsDefault { get; set; }
     }
 }

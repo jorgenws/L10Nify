@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Serialization;
 
 namespace Core {
     public class LocalizationHandler : ICommandHandler {
@@ -26,6 +27,10 @@ namespace Core {
                                command.LanguageRegion,
                                command.LCID,
                                command.NewDisplayName);
+        }
+
+        private void Handle(SetLanguageAsDefaultCommand command) {
+            _model.SetLanguageAsDefault(command.LanguageId);
         }
 
         private void Handle(RemoveLanguageCommand command) {
@@ -128,6 +133,13 @@ namespace Core {
                                           language.DisplayName);
         }
 
+        private BaseCommand BuildUndoCommand(SetLanguageAsDefaultCommand command) {
+            var language = _model.RetriveLanguages()
+                                 .Single(c => c.IsDefault);
+
+            return new SetLanguageAsDefaultCommand(language.Id);
+        }
+
         private BaseCommand BuildUndoCommand(RemoveLanguageCommand command) {
             var undoCommands = new List<BaseCommand>();
             var language = _model.RetriveLanguage(command.LanguageId);
@@ -139,6 +151,9 @@ namespace Core {
                                                     language.LanguageRegion,
                                                     language.LCID,
                                                     language.DisplayName));
+            if (language.IsDefault)
+                undoCommands.Add(new SetLanguageAsDefaultCommand(language.Id));
+
             foreach (var text in textsThatUsesThisLanguage) {
                 var key = _model.RetriveLocalizationKey(text.KeyId);
                 undoCommands.Add(new AddLocalizedTextCommand(key.AreaId,
@@ -256,6 +271,14 @@ namespace Core {
                                        .ToList();
 
             return new CommandSequence(undoCommands);
+        }
+    }
+
+    public class SetLanguageAsDefaultCommand : BaseCommand {
+        public Guid LanguageId { get; private set; }
+
+        public SetLanguageAsDefaultCommand(Guid languageId) {
+            LanguageId = languageId;
         }
     }
 

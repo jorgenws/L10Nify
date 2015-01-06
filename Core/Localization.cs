@@ -138,6 +138,9 @@ namespace Core {
             if (_languages.ContainsKey(language.Id) || _languages.Values.Any(c => c.LanguageRegion == language.LanguageRegion))
                 throw new Exception("Cannot add more then one language with the same id");
 
+            if (!_languages.Values.Any())
+                language.IsDefault = true;
+
             _languages.Add(language.Id, language);
         }
 
@@ -158,10 +161,27 @@ namespace Core {
             language.LCID = lcid;
         }
 
+        public void SetLanguageAsDefault(Guid id) {
+            if (!_languages.ContainsKey(id))
+                throw new Exception("Language does not exist");
+
+            var oldDefault = _languages.Values.Single(c => c.IsDefault);
+            oldDefault.IsDefault = false;
+            _languages[id].IsDefault = true;
+        }
+
         public void RemoveLanguage(Guid languageId) {
             if (_languages.ContainsKey(languageId)) {
+                bool isDefault = _languages[languageId].IsDefault;
+                    
                 _languages.Remove(languageId);
 
+                if (isDefault) {
+                    var first = _languages.Values.FirstOrDefault();
+                    if (first != null)
+                        first.IsDefault = true;
+                }
+                
                 //remove all texts associated with the language
                 var textsToBeRemoved = _texts.Values.Where(c => c.LanguageId == languageId)
                                              .ToList();
@@ -267,6 +287,7 @@ namespace Core {
                          string languageRegion,
                          int lcid,
                          string displayName);
+        void SetLanguageAsDefault(Guid languageId);
         void RemoveLanguage(Guid languageId);
         void AddHistoryEntry(HistoryEntry entry);
         IEnumerable<Area> RetriveAreas();

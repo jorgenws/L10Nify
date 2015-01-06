@@ -69,6 +69,11 @@
     </ApplicationDefinition>
     <Compile Include="AppBootstrapper.cs" />
     <Compile Include="IShell.cs" />
+    <Compile Include="Test1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Test1.resx</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\AddAreaViewModel.cs" />
     <Compile Include="ViewModel\AddLanguageViewModel.cs" />
     <Compile Include="ViewModel\AddLocalizationKeyViewModel.cs" />
@@ -77,6 +82,7 @@
     <Compile Include="ViewModel\AreaViewModel.cs" />
     <Compile Include="ViewModel\Factory\AreaViewModelFactory.cs" />
     <Compile Include="ViewModel\ITreeNodeViewModel.cs" />
+    <Compile Include="ViewModel\LanguageViewModel.cs" />
     <Compile Include="ViewModel\ListOrientedWorkbenchViewModel.cs" />
     <Compile Include="ViewModel\LocalizationKeyTreeNodeViewModel.cs" />
     <Compile Include="ViewModel\LocalizedTextTreeNodeViewModel.cs" />
@@ -187,6 +193,10 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Test1.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Test1.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

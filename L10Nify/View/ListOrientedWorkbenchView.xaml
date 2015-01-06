@@ -61,9 +61,16 @@
                     <ListBox Grid.Row="1" ItemsSource="{Binding Languages}" Name="LanguageListBox"
                              HorizontalContentAlignment="Stretch" 
                              VerticalContentAlignment="Stretch">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <cal:ActionMessage MethodName="SetLanguageAsDefault">
+                                    <cal:Parameter Value="{Binding ElementName=LanguageListBox, Path=SelectedItem}" />
+                                </cal:ActionMessage>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding DisplayName}" />
+                                <TextBlock Text="{Binding ListDisplayName}" />
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>

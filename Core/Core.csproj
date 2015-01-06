@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AreaFactory.cs" />
+    <Compile Include="BuildDotNetResourceFiles.cs" />
     <Compile Include="BuildJsonResourceFileVisitor.cs" />
     <Compile Include="CommandInvoker.cs" />
     <Compile Include="DifferenceFinder.cs" />

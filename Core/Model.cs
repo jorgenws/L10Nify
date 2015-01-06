@@ -142,6 +142,11 @@ namespace Core {
             ModelHasBeenUpdated();
         }
 
+        public void SetLanguageAsDefault(Guid languageId) {
+            _localization.SetLanguageAsDefault(languageId);
+            ModelHasBeenUpdated();
+        }
+
         public void RemoveLanguage(Guid id) {
             _localization.RemoveLanguage(id);
             ModelHasBeenUpdated();

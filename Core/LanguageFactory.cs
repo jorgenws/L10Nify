@@ -4,7 +4,7 @@ namespace Core {
     public class LanguageFactory : ILanguageFactory {
         public Language Create(Guid languageId,
                                string languageRegion,
-            int lcid,
+                               int lcid,
                                string displayName) {
             if (languageId == Guid.Empty)
                 throw new NotSupportedException("Language id  cannot be empty");
@@ -13,7 +13,8 @@ namespace Core {
                                     Id = languageId,
                                     LCID = lcid,
                                     LanguageRegion = languageRegion,
-                                    DisplayName = displayName
+                                    DisplayName = displayName,
+                                    IsDefault = false
                                 };
         }
     }

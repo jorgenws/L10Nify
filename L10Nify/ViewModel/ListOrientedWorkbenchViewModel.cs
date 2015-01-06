@@ -7,9 +7,10 @@ using Core;
 namespace L10Nify {
     public class ListOrientedWorkbenchViewModel : PropertyChangedBase,
                                                   IWorkbench {
-        public IEnumerable<Language> Languages {
+        public IEnumerable<LanguageViewModel> Languages {
             get {
                 return _queryModel.RetriveLanguages()
+                                  .Select(c => new LanguageViewModel(c))
                                   .ToList();
             }
         }
@@ -80,7 +81,14 @@ namespace L10Nify {
                                                               vm.LanguageDisplayName));
         }
 
-        public void RemoveLanguage(Language language) {
+        public void SetLanguageAsDefault(LanguageViewModel language) {
+            if(language == null)
+                return;
+
+            _commandInvoker.Invoke(new SetLanguageAsDefaultCommand(language.Id));
+        }
+
+        public void RemoveLanguage(LanguageViewModel language) {
             if(language == null) return;
 
             _commandInvoker.Invoke(new RemoveLanguageCommand(language.Id));
